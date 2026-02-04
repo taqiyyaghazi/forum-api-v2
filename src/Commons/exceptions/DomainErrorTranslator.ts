@@ -23,7 +23,7 @@ const directories: ErrorDirectory = {
     'username dan password harus string',
   ),
   'USER_LOGIN_USE_CASE.INVALID_CREDENTIALS': new AuthenticationError(
-    'password salah',
+    'kredensial yang Anda masukkan salah',
   ),
   'USER_LOGIN_USE_CASE.USERNAME_NOT_FOUND': new InvariantError(
     'username tidak ditemukan',
@@ -47,6 +47,12 @@ const directories: ErrorDirectory = {
   ),
   'LOGOUT_USER_USE_CASE.REFRESH_TOKEN_NOT_FOUND': new InvariantError(
     'refresh token tidak ditemukan di database',
+  ),
+  'REFRESH_TOKEN.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'harus mengirimkan token refresh',
+  ),
+  'REFRESH_TOKEN.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'refresh token harus string',
   ),
 };
 
