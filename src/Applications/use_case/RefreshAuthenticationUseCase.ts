@@ -35,8 +35,6 @@ class RefreshAuthenticationUseCase {
       throw new Error('REFRESH_AUTHENTICATION_USE_CASE.TOKEN_NOT_FOUND');
     }
 
-    await this.authenticationRepository.deleteToken(refreshToken);
-
     const { id } = await this.tokenManager.decodePayload(refreshToken);
 
     const accessToken = await this.tokenManager.createAccessToken({

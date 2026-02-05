@@ -54,6 +54,15 @@ const directories: ErrorDirectory = {
   'REFRESH_TOKEN.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
     'refresh token harus string',
   ),
+  'NEW_THREAD.NOT_CONTAIN_PAYLOAD': new InvariantError(
+    'tidak dapat membuat thread baru karena payload yang dibutuhkan tidak ada',
+  ),
+  'NEW_THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada',
+  ),
+  'NEW_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'tidak dapat membuat thread baru karena tipe data tidak sesuai',
+  ),
 };
 
 const DomainErrorTranslator = {

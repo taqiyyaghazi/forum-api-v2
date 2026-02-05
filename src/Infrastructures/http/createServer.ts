@@ -4,6 +4,7 @@ import ClientError from '../../Commons/exceptions/ClientError.js';
 import DomainErrorTranslator from '../../Commons/exceptions/DomainErrorTranslator.js';
 import users from '../../Interfaces/users/index.js';
 import authentications from '../../Interfaces/authentications/index.js';
+import threads from '../../Interfaces/threads/index.js';
 
 const createServer = async (container: Container): Promise<Application> => {
   const app = express();
@@ -12,6 +13,7 @@ const createServer = async (container: Container): Promise<Application> => {
 
   app.use('/users', users(container));
   app.use('/authentications', authentications(container));
+  app.use('/threads', threads(container));
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {

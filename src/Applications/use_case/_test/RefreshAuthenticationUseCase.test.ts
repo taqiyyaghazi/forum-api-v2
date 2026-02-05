@@ -66,7 +66,6 @@ describe('RefreshAuthenticationUseCase', () => {
 
     const mockAuthenticationRepository = {
       checkAvailabilityToken: vi.fn().mockResolvedValue(true),
-      deleteToken: vi.fn().mockResolvedValue(undefined),
     } as unknown as AuthenticationRepository;
 
     const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase(
@@ -88,12 +87,7 @@ describe('RefreshAuthenticationUseCase', () => {
     expect(mockAuthenticationRepository.checkAvailabilityToken).toBeCalledWith(
       payload.refreshToken,
     );
-    expect(mockAuthenticationRepository.deleteToken).toBeCalledWith(
-      payload.refreshToken,
-    );
-    expect(mockTokenManager.decodePayload).toBeCalledWith(
-      payload.refreshToken,
-    );
+    expect(mockTokenManager.decodePayload).toBeCalledWith(payload.refreshToken);
     expect(mockTokenManager.createAccessToken).toBeCalledWith({
       id: 'user-123',
     });
