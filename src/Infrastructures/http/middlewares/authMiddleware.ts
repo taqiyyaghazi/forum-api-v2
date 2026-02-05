@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Container } from 'instances-container';
-import TokenManager from '../../Applications/security/TokenManager.js';
-import AuthenticationError from '../../Commons/exceptions/AuthenticationError.js';
+import TokenManager from '../../../Applications/security/TokenManager.js';
+import AuthenticationError from '../../../Commons/exceptions/AuthenticationError.js';
 
 const createAuthMiddleware = (container: Container) => {
   return async (

@@ -4,20 +4,23 @@ import jwt from 'jsonwebtoken';
 import { nanoid } from 'nanoid';
 import PasswordHash from '../Applications/security/PasswordHash.js';
 import TokenManager from '../Applications/security/TokenManager.js';
+import AddCommentUseCase from '../Applications/use_case/AddCommentUseCase.js';
+import AddThreadUseCase from '../Applications/use_case/AddThreadUseCase.js';
 import AddUserUseCase from '../Applications/use_case/AddUserUseCase.js';
 import LoginUserUseCase from '../Applications/use_case/LoginUserUseCase.js';
+import LogoutUserUseCase from '../Applications/use_case/LogoutUserUseCase.js';
+import RefreshAuthenticationUseCase from '../Applications/use_case/RefreshAuthenticationUseCase.js';
 import AuthenticationRepository from '../Domains/authentications/AuthenticationRepository.js';
+import CommentRepository from '../Domains/comments/CommentRepository.js';
+import ThreadRepository from '../Domains/threads/ThreadRepository.js';
 import UserRepository from '../Domains/users/UserRepository.js';
 import pool from './database/postgres/pool.js';
 import AuthenticationRepositoryPostgres from './repository/AuthenticationRepositoryPostgres.js';
+import CommentRepositoryPostgres from './repository/CommentRepositoryPostgres.js';
+import ThreadRepositoryPostgres from './repository/ThreadRepositoryPostgres.js';
 import UserRepositoryPostgres from './repository/UserRepositoryPostgres.js';
 import BcryptPasswordHash from './security/BcryptPasswordHash.js';
 import JwtTokenManager from './security/JwtTokenManager.js';
-import LogoutUserUseCase from '../Applications/use_case/LogoutUserUseCase.js';
-import RefreshAuthenticationUseCase from '../Applications/use_case/RefreshAuthenticationUseCase.js';
-import AddThreadUseCase from '../Applications/use_case/AddThreadUseCase.js';
-import ThreadRepository from '../Domains/threads/ThreadRepository.js';
-import ThreadRepositoryPostgres from './repository/ThreadRepositoryPostgres.js';
 
 const container = createContainer();
 
@@ -50,6 +53,20 @@ container.register([
   {
     key: ThreadRepository.name,
     Class: ThreadRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: CommentRepository.name,
+    Class: CommentRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -159,6 +176,22 @@ container.register([
     Class: AddThreadUseCase,
     parameter: {
       dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddCommentUseCase.name,
+    Class: AddCommentUseCase,
+    parameter: {
+      dependencies: [
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        },
         {
           name: 'threadRepository',
           internal: ThreadRepository.name,

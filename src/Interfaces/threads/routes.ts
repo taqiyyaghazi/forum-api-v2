@@ -1,14 +1,11 @@
-import express, { Router } from 'express';
-import { Container } from 'instances-container';
-import createAuthMiddleware from '../middlewares/authMiddleware.js';
+import express, { RequestHandler, Router } from 'express';
 import ThreadsHandler from './handler.js';
 
 const createThreadsRouter = (
   handler: ThreadsHandler,
-  container: Container,
+  authMiddleware: RequestHandler,
 ): Router => {
   const router = express.Router();
-  const authMiddleware = createAuthMiddleware(container);
 
   router.post('/', authMiddleware, handler.postThreadHandler);
 

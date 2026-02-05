@@ -7,6 +7,10 @@ class ThreadRepository {
   async addThread(_payload: NewThread): Promise<AddedThread> {
     throw new Error('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
+
+  async verifyThreadExists(_threadId: string): Promise<boolean> {
+    throw new Error('THREAD_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
 }
 
 export default ThreadRepository;

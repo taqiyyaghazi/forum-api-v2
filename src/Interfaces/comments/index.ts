@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { Container } from 'instances-container';
+import CommentsHandler from './handler.js';
+import createCommentsRouter from './routes.js';
 import createAuthMiddleware from '../../Infrastructures/http/middlewares/authMiddleware.js';
-import ThreadsHandler from './handler.js';
-import createThreadsRouter from './routes.js';
 
 export default (container: Container): Router => {
-  const threadsHandler = new ThreadsHandler(container);
+  const commentsHandler = new CommentsHandler(container);
   const authMiddleware = createAuthMiddleware(container);
-  return createThreadsRouter(threadsHandler, authMiddleware);
+  return createCommentsRouter(commentsHandler, authMiddleware);
 };
