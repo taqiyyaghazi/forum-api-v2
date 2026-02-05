@@ -8,6 +8,7 @@ const createThreadsRouter = (
   const router = express.Router();
 
   router.post('/', authMiddleware, handler.postThreadHandler);
+  router.get('/:threadId', handler.getThreadDetailHandler);
 
   return router;
 };

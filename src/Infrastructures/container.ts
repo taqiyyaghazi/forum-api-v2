@@ -6,6 +6,7 @@ import PasswordHash from '../Applications/security/PasswordHash.js';
 import TokenManager from '../Applications/security/TokenManager.js';
 import AddCommentUseCase from '../Applications/use_case/AddCommentUseCase.js';
 import AddThreadUseCase from '../Applications/use_case/AddThreadUseCase.js';
+import GetThreadDetailUseCase from '../Applications/use_case/GetThreadDetailUseCase.js';
 import AddUserUseCase from '../Applications/use_case/AddUserUseCase.js';
 import LoginUserUseCase from '../Applications/use_case/LoginUserUseCase.js';
 import LogoutUserUseCase from '../Applications/use_case/LogoutUserUseCase.js';
@@ -195,6 +196,22 @@ container.register([
         {
           name: 'threadRepository',
           internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: GetThreadDetailUseCase.name,
+    Class: GetThreadDetailUseCase,
+    parameter: {
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
         },
       ],
     },

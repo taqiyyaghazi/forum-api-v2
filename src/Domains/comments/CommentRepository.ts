@@ -7,6 +7,20 @@ class CommentRepository {
   async addComment(_newComment: NewComment): Promise<AddedComment> {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
+
+  async getCommentsByThreadId(
+    _threadId: string,
+  ): Promise<
+    {
+      id: string;
+      username: string;
+      date: Date;
+      content: string;
+      isDeleted: boolean;
+    }[]
+  > {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
 }
 
 export default CommentRepository;

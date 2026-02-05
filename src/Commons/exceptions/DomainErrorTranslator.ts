@@ -76,6 +76,9 @@ const directories: ErrorDirectory = {
   'ADD_COMMENT_USE_CASE.THREAD_NOT_FOUND': new NotFoundError(
     'thread tidak ditemukan',
   ),
+  'GET_THREAD_DETAIL_USE_CASE.THREAD_NOT_FOUND': new NotFoundError(
+    'thread tidak ditemukan',
+  ),
 };
 
 const DomainErrorTranslator = {

@@ -1,0 +1,130 @@
+import { afterAll, afterEach, describe, expect, it } from 'vitest';
+import CommentsTableTestHelper from '../../../tests/CommentsTableTestHelper.js';
+import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper.js';
+import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
+import NewComment from '../../../Domains/comments/entities/NewComment.js';
+import AddedComment from '../../../Domains/comments/entities/AddedComment.js';
+import pool from '../../database/postgres/pool.js';
+import CommentRepositoryPostgres from '../CommentRepositoryPostgres.js';
+
+describe('CommentRepositoryPostgres', () => {
+  afterEach(async () => {
+    await CommentsTableTestHelper.cleanTable();
+    await ThreadsTableTestHelper.cleanTable();
+    await UsersTableTestHelper.cleanTable();
+  });
+
+  afterAll(async () => {
+    await pool.end();
+  });
+
+  describe('addComment function', () => {
+    it('should persist new comment and return added comment correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({
+        id: 'user-comment-123',
+        username: 'dicoding-comment',
+      });
+      await ThreadsTableTestHelper.addThread({
+        id: 'thread-comment-123',
+        owner: 'user-comment-123',
+      });
+      const newComment = new NewComment({
+        content: 'sebuah comment',
+        threadId: 'thread-comment-123',
+        owner: 'user-comment-123',
+      });
+      const fakeIdGenerator = (): string => '123';
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(
+        pool,
+        fakeIdGenerator,
+      );
+
+      // Action
+      const addedComment =
+        await commentRepositoryPostgres.addComment(newComment);
+
+      // Assert
+      expect(addedComment).toStrictEqual(
+        new AddedComment({
+          id: 'comment-123',
+          content: 'sebuah comment',
+          owner: 'user-comment-123',
+        }),
+      );
+
+      const comment =
+        await CommentsTableTestHelper.findCommentById('comment-123');
+      expect(comment).toHaveLength(1);
+    });
+  });
+
+  describe('getCommentsByThreadId function', () => {
+    it('should return comments correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({
+        id: 'user-comment-123',
+        username: 'dicoding-comment',
+      });
+      await UsersTableTestHelper.addUser({
+        id: 'user-comment-456',
+        username: 'johndoe-comment',
+      });
+
+      await ThreadsTableTestHelper.addThread({
+        id: 'thread-comment-123',
+        owner: 'user-comment-123',
+      });
+
+      const date1 = new Date('2021-08-08T07:22:33.555Z');
+      const date2 = new Date('2021-08-08T07:26:21.338Z');
+
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-123',
+        content: 'sebuah comment',
+        owner: 'user-comment-456',
+        threadId: 'thread-comment-123',
+        date: date1,
+        isDeleted: false,
+      });
+
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-456',
+        content: 'sebuah comment lainnya',
+        owner: 'user-comment-123',
+        threadId: 'thread-comment-123',
+        date: date2,
+        isDeleted: true,
+      });
+
+      const fakeIdGenerator = (): string => '123';
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(
+        pool,
+        fakeIdGenerator,
+      );
+
+      // Action
+      const comments =
+        await commentRepositoryPostgres.getCommentsByThreadId(
+          'thread-comment-123',
+        );
+
+      // Assert
+      expect(comments).toHaveLength(2);
+      expect(comments[0]).toStrictEqual({
+        id: 'comment-123',
+        username: 'johndoe-comment',
+        date: date1,
+        content: 'sebuah comment',
+        isDeleted: false,
+      });
+      expect(comments[1]).toStrictEqual({
+        id: 'comment-456',
+        username: 'dicoding-comment',
+        date: date2,
+        content: 'sebuah comment lainnya',
+        isDeleted: true,
+      });
+    });
+  });
+});

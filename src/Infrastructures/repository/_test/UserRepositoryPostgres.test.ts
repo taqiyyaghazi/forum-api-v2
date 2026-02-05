@@ -4,7 +4,7 @@ import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
 import pool from '../../database/postgres/pool.js';
 import UserRepositoryPostgres from '../UserRepositoryPostgres.js';
 
-describe.skip('UserRepositoryPostgres', () => {
+describe('UserRepositoryPostgres', () => {
   afterEach(async () => {
     await UsersTableTestHelper.cleanTable();
   });

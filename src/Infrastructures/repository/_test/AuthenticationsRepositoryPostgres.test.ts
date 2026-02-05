@@ -2,7 +2,7 @@ import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableT
 import pool from '../../database/postgres/pool.js';
 import AuthenticationRepositoryPostgres from '../AuthenticationRepositoryPostgres.js';
 
-describe.skip('AuthenticationRepositoryPostgres', () => {
+describe('AuthenticationRepositoryPostgres', () => {
   afterEach(async () => {
     await AuthenticationsTableTestHelper.cleanTable();
   });

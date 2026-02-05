@@ -6,7 +6,7 @@ import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
 import pool from '../../database/postgres/pool.js';
 import ThreadRepositoryPostgres from '../ThreadRepositoryPostgres.js';
 
-describe.skip('ThreadRepositoryPostgres', () => {
+describe('ThreadRepositoryPostgres', () => {
   afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
@@ -20,15 +20,15 @@ describe.skip('ThreadRepositoryPostgres', () => {
     it('should persist new thread and return added thread correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({
-        id: 'user-124',
-        username: 'dicoding',
+        id: 'user-thread-124',
+        username: 'dicoding-thread',
       });
       const idGenerator = (): string => '123';
       const threadRepository = new ThreadRepositoryPostgres(pool, idGenerator);
       const newThread = new NewThread({
         title: 'A Thread Title',
         body: 'Thread body content',
-        owner: 'user-124',
+        owner: 'user-thread-124',
       });
 
       // Action
@@ -39,21 +39,21 @@ describe.skip('ThreadRepositoryPostgres', () => {
       expect(thread).toHaveLength(1);
       expect(thread[0].title).toBe('A Thread Title');
       expect(thread[0].body).toBe('Thread body content');
-      expect(thread[0].owner).toBe('user-124');
+      expect(thread[0].owner).toBe('user-thread-124');
     });
 
     it('should return added thread correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({
-        id: 'user-125',
-        username: 'dicoding',
+        id: 'user-thread-125',
+        username: 'dicoding-thread-2',
       });
       const idGenerator = (): string => '543';
       const threadRepository = new ThreadRepositoryPostgres(pool, idGenerator);
       const newThread = new NewThread({
         title: 'A Thread Title',
         body: 'Thread body content',
-        owner: 'user-125',
+        owner: 'user-thread-125',
       });
 
       // Action
@@ -65,9 +65,83 @@ describe.skip('ThreadRepositoryPostgres', () => {
           id: 'thread-543',
           title: 'A Thread Title',
           body: 'Thread body content',
-          owner: 'user-125',
+          owner: 'user-thread-125',
         }),
       );
+    });
+  });
+
+  describe('verifyThreadExists function', () => {
+    it('should return true if thread exists', async () => {
+      // Arrange
+      const idGenerator = (): string => '123';
+      await UsersTableTestHelper.addUser({
+        id: 'user-thread-123',
+        username: 'dicoding-thread-3',
+      });
+      await ThreadsTableTestHelper.addThread({
+        id: 'thread-thread-123',
+        owner: 'user-thread-123',
+      });
+      const repository = new ThreadRepositoryPostgres(pool, idGenerator);
+
+      // Action & Assert
+      await expect(
+        repository.verifyThreadExists('thread-thread-123'),
+      ).resolves.toBe(true);
+    });
+
+    it('should return false if thread not exists', async () => {
+      // Arrange
+      const idGenerator = (): string => '123';
+      const repository = new ThreadRepositoryPostgres(pool, idGenerator);
+
+      // Action & Assert
+      await expect(repository.verifyThreadExists('thread-456')).resolves.toBe(
+        false,
+      );
+    });
+  });
+
+  describe('getThreadById function', () => {
+    it('should return null if thread not exists', async () => {
+      // Arrange
+      const idGenerator = (): string => '123';
+      const repository = new ThreadRepositoryPostgres(pool, idGenerator);
+
+      // Action & Assert
+      const thread = await repository.getThreadById('thread-456');
+      expect(thread).toBeNull();
+    });
+
+    it('should return thread details correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({
+        id: 'user-thread-get-123',
+        username: 'dicoding-thread-4',
+      });
+      const date = new Date();
+      await ThreadsTableTestHelper.addThread({
+        id: 'thread-get-123',
+        title: 'sebuah thread',
+        body: 'sebuah body thread',
+        owner: 'user-thread-get-123',
+        date: date,
+      });
+      const idGenerator = (): string => '123';
+      const repository = new ThreadRepositoryPostgres(pool, idGenerator);
+
+      // Action
+      const thread = await repository.getThreadById('thread-get-123');
+
+      // Assert
+      expect(thread).toStrictEqual({
+        id: 'thread-get-123',
+        title: 'sebuah thread',
+        body: 'sebuah body thread',
+        date: date,
+        username: 'dicoding-thread-4',
+      });
     });
   });
 });
