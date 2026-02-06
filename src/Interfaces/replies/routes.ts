@@ -8,6 +8,7 @@ const createRepliesRouter = (
   const router = express.Router({ mergeParams: true });
 
   router.post('/', authMiddleware, handler.postReplyHandler);
+  router.delete('/:replyId', authMiddleware, handler.deleteReplyHandler);
 
   return router;
 };

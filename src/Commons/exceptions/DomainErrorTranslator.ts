@@ -98,6 +98,12 @@ const directories: ErrorDirectory = {
   'DELETE_COMMENT_USE_CASE.COMMENT_NOT_OWNER': new AuthorizationError(
     'anda tidak berhak menghapus comment ini',
   ),
+  'DELETE_REPLY_USE_CASE.REPLY_NOT_FOUND': new NotFoundError(
+    'reply tidak ditemukan',
+  ),
+  'DELETE_REPLY_USE_CASE.REPLY_NOT_OWNER': new AuthorizationError(
+    'anda tidak berhak menghapus reply ini',
+  ),
 };
 
 const DomainErrorTranslator = {

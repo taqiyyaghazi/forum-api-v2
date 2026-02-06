@@ -26,6 +26,7 @@ import UserRepositoryPostgres from './repository/UserRepositoryPostgres.js';
 import BcryptPasswordHash from './security/BcryptPasswordHash.js';
 import JwtTokenManager from './security/JwtTokenManager.js';
 import DeleteCommentUseCase from '../Applications/use_case/DeleteCommentUseCase.js';
+import DeleteReplyUseCase from '../Applications/use_case/DeleteReplyUseCase.js';
 
 const container = createContainer();
 
@@ -270,6 +271,18 @@ container.register([
         {
           name: 'commentRepository',
           internal: CommentRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: DeleteReplyUseCase.name,
+    Class: DeleteReplyUseCase,
+    parameter: {
+      dependencies: [
+        {
+          name: 'replyRepository',
+          internal: ReplyRepository.name,
         },
       ],
     },

@@ -23,6 +23,22 @@ class ReplyRepository {
   > {
     throw new Error('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
+
+  async checkReplyAvailability(
+    _replyId: string,
+    _commentId: string,
+    _threadId: string,
+  ): Promise<boolean> {
+    throw new Error('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
+
+  async verifyReplyOwner(_replyId: string, _owner: string): Promise<boolean> {
+    throw new Error('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
+
+  async deleteReply(_replyId: string): Promise<void> {
+    throw new Error('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
 }
 
 export default ReplyRepository;

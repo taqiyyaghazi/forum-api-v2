@@ -55,6 +55,48 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
     return result.rows;
   }
+
+  async checkReplyAvailability(
+    replyId: string,
+    commentId: string,
+    threadId: string,
+  ): Promise<boolean> {
+    const query = {
+      text: `
+        SELECT replies.id
+        FROM replies
+        INNER JOIN comments ON replies.comment_id = comments.id
+        WHERE replies.id = $1
+        AND replies.comment_id = $2
+        AND comments.thread_id = $3
+      `,
+      values: [replyId, commentId, threadId],
+    };
+
+    const result = await this.pool.query(query);
+
+    return !!result.rowCount;
+  }
+
+  async verifyReplyOwner(replyId: string, owner: string): Promise<boolean> {
+    const query = {
+      text: 'SELECT owner FROM replies WHERE id = $1 AND owner = $2',
+      values: [replyId, owner],
+    };
+
+    const result = await this.pool.query(query);
+
+    return !!result.rowCount;
+  }
+
+  async deleteReply(replyId: string): Promise<void> {
+    const query = {
+      text: 'UPDATE replies SET is_deleted = true WHERE id = $1',
+      values: [replyId],
+    };
+
+    await this.pool.query(query);
+  }
 }
 
 export default ReplyRepositoryPostgres;
