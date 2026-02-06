@@ -44,7 +44,7 @@ describe('ThreadDetail entity', () => {
 
   it('should create threadDetail object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: ThreadDetailPayload = {
       id: 'thread-123',
       title: 'sebuah thread',
       body: 'sebuah body thread',

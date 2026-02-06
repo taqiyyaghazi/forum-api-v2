@@ -43,10 +43,11 @@ describe('CommentDetail entity', () => {
 
   it('should create commentDetail object correctly', () => {
     // Arrange
-    const payload = {
+    const mockDate = new Date();
+    const payload: CommentDetailPayload = {
       id: 'comment-123',
       username: 'dicoding',
-      date: new Date(),
+      date: mockDate,
       content: 'sebuah comment',
       isDeleted: false,
       replies: [],
@@ -57,19 +58,20 @@ describe('CommentDetail entity', () => {
 
     // Assert
     expect(commentDetail).toBeInstanceOf(CommentDetail);
-    expect(commentDetail.id).toEqual(payload.id);
-    expect(commentDetail.username).toEqual(payload.username);
-    expect(commentDetail.date).toEqual(payload.date);
-    expect(commentDetail.content).toEqual(payload.content);
-    expect(commentDetail.replies).toEqual(payload.replies);
+    expect(commentDetail.id).toEqual('comment-123');
+    expect(commentDetail.username).toEqual('dicoding');
+    expect(commentDetail.date).toEqual(mockDate);
+    expect(commentDetail.content).toEqual('sebuah comment');
+    expect(commentDetail.replies).toEqual([]);
   });
 
   it('should create deleted commentDetail object correctly', () => {
     // Arrange
-    const payload = {
+    const mockDate = new Date();
+    const payload: CommentDetailPayload = {
       id: 'comment-123',
       username: 'johndoe',
-      date: new Date(),
+      date: mockDate,
       content: 'sebuah comment',
       isDeleted: true,
       replies: [],
@@ -80,9 +82,9 @@ describe('CommentDetail entity', () => {
 
     // Assert
     expect(commentDetail).toBeInstanceOf(CommentDetail);
-    expect(commentDetail.id).toEqual(payload.id);
-    expect(commentDetail.username).toEqual(payload.username);
-    expect(commentDetail.date).toEqual(payload.date);
+    expect(commentDetail.id).toEqual('comment-123');
+    expect(commentDetail.username).toEqual('johndoe');
+    expect(commentDetail.date).toEqual(mockDate);
     expect(commentDetail.content).toEqual('**komentar telah dihapus**');
   });
 });

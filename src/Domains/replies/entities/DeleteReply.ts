@@ -1,4 +1,4 @@
-interface DeleteReplyPayload {
+export interface DeleteReplyPayload {
   threadId: string;
   commentId: string;
   replyId: string;
@@ -26,7 +26,7 @@ class DeleteReply {
     const { threadId, commentId, replyId, owner } = payload;
 
     if (!threadId || !commentId || !replyId || !owner) {
-      throw new Error('DELETE_REPLY_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
+      throw new Error('DELETE_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
     if (
@@ -35,7 +35,7 @@ class DeleteReply {
       typeof replyId !== 'string' ||
       typeof owner !== 'string'
     ) {
-      throw new Error('DELETE_REPLY_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
+      throw new Error('DELETE_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
 }

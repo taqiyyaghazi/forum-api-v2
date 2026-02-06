@@ -36,7 +36,7 @@ describe('RefreshToken entity', () => {
 
   it('should create RefreshToken object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: RefreshTokenPayload = {
       refreshToken: 'refresh_token',
     };
 

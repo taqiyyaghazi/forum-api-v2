@@ -69,7 +69,7 @@ describe('RegisterUser entity', () => {
 
   it('should create registerUser object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: RegisterUserPayload = {
       username: 'dicoding',
       password: 'secret',
       fullname: 'Dicoding Indonesia',
@@ -79,8 +79,8 @@ describe('RegisterUser entity', () => {
     const registerUser = new RegisterUser(payload);
 
     // Assert
-    expect(registerUser.username).toEqual(payload.username);
-    expect(registerUser.password).toEqual(payload.password);
-    expect(registerUser.fullname).toEqual(payload.fullname);
+    expect(registerUser.username).toEqual('dicoding');
+    expect(registerUser.password).toEqual('secret');
+    expect(registerUser.fullname).toEqual('Dicoding Indonesia');
   });
 });

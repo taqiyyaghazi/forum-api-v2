@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import config from '../config.js';
 
 describe('config', () => {

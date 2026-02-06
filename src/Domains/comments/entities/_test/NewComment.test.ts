@@ -47,7 +47,7 @@ describe('NewComment entity', () => {
 
   it('should create NewComment object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: NewCommentPayload = {
       content: 'sebuah comment',
       threadId: 'thread-123',
       owner: 'user-123',
@@ -57,8 +57,8 @@ describe('NewComment entity', () => {
     const newComment = new NewComment(payload);
 
     // Assert
-    expect(newComment.content).toEqual(payload.content);
-    expect(newComment.threadId).toEqual(payload.threadId);
-    expect(newComment.owner).toEqual(payload.owner);
+    expect(newComment.content).toEqual('sebuah comment');
+    expect(newComment.threadId).toEqual('thread-123');
+    expect(newComment.owner).toEqual('user-123');
   });
 });

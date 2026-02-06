@@ -41,7 +41,7 @@ describe('RegisteredUser entity', () => {
 
   it('should create registeredUser object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: RegisteredUserPayload = {
       id: 'user-123',
       username: 'dicoding',
       fullname: 'Dicoding Indonesia',
@@ -51,8 +51,8 @@ describe('RegisteredUser entity', () => {
     const registeredUser = new RegisteredUser(payload);
 
     // Assert
-    expect(registeredUser.id).toEqual(payload.id);
-    expect(registeredUser.username).toEqual(payload.username);
-    expect(registeredUser.fullname).toEqual(payload.fullname);
+    expect(registeredUser.id).toEqual('user-123');
+    expect(registeredUser.username).toEqual('dicoding');
+    expect(registeredUser.fullname).toEqual('Dicoding Indonesia');
   });
 });

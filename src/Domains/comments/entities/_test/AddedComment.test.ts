@@ -47,7 +47,7 @@ describe('AddedComment entity', () => {
 
   it('should create AddedComment object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: AddedCommentPayload = {
       id: 'comment-123',
       content: 'sebuah comment',
       owner: 'user-123',
@@ -57,8 +57,8 @@ describe('AddedComment entity', () => {
     const addedComment = new AddedComment(payload);
 
     // Assert
-    expect(addedComment.id).toEqual(payload.id);
-    expect(addedComment.content).toEqual(payload.content);
-    expect(addedComment.owner).toEqual(payload.owner);
+    expect(addedComment.id).toEqual('comment-123');
+    expect(addedComment.content).toEqual('sebuah comment');
+    expect(addedComment.owner).toEqual('user-123');
   });
 });

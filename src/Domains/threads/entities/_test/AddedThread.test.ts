@@ -49,7 +49,7 @@ describe('AddedThread entity', () => {
 
   it('should create AddedThread object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: AddedThreadPayload = {
       id: 'thread-123',
       title: 'A Thread Title',
       body: 'Thread body content',

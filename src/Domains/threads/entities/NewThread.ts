@@ -5,9 +5,10 @@ interface NewThreadPayload {
 }
 
 class NewThread {
-  public readonly title: string;
-  public readonly body: string;
-  public readonly owner: string;
+  readonly title: string;
+  readonly body: string;
+  readonly owner: string;
+
   constructor(payload: NewThreadPayload) {
     this._verifyPayload(payload);
 

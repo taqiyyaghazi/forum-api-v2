@@ -47,7 +47,7 @@ describe('NewThread entity', () => {
 
   it('should create NewThread object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: NewThreadPayload = {
       title: 'A Thread Title',
       body: 'Thread body content',
       owner: 'user-123',

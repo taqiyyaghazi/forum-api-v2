@@ -39,7 +39,7 @@ describe('UserLogin entity', () => {
 
   it('should create userLogin object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: UserLoginPayload = {
       username: 'dicoding',
       password: 'secret',
     };
@@ -48,7 +48,7 @@ describe('UserLogin entity', () => {
     const userLogin = new UserLogin(payload);
 
     // Assert
-    expect(userLogin.username).toEqual(payload.username);
-    expect(userLogin.password).toEqual(payload.password);
+    expect(userLogin.username).toEqual('dicoding');
+    expect(userLogin.password).toEqual('secret');
   });
 });

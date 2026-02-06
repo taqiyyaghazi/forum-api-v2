@@ -39,7 +39,7 @@ describe('NewAuth entity', () => {
 
   it('should create NewAuth object correctly', () => {
     // Arrange
-    const payload = {
+    const payload: NewAuthPayload = {
       accessToken: 'accessToken',
       refreshToken: 'refreshToken',
     };
