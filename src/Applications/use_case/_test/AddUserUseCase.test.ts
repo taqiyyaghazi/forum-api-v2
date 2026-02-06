@@ -12,14 +12,13 @@ describe('AddUserUseCase', () => {
       fullname: 'Dicoding Indonesia',
     };
 
-    const mockUserRepository = {
-      verifyAvailableUsername: vi.fn().mockResolvedValue(true),
-      addUser: vi.fn(),
-    } as unknown as UserRepository;
+    const mockUserRepository = new UserRepository();
 
-    const mockPasswordHash = {
-      hash: vi.fn(),
-    } as unknown as PasswordHash;
+    mockUserRepository.verifyAvailableUsername = vi
+      .fn()
+      .mockResolvedValue(true);
+
+    const mockPasswordHash = new PasswordHash();
 
     const addUserUseCase = new AddUserUseCase(
       mockUserRepository,
@@ -40,18 +39,18 @@ describe('AddUserUseCase', () => {
       fullname: 'Dicoding Indonesia',
     };
 
-    const mockUserRepository = {
-      verifyAvailableUsername: vi.fn().mockResolvedValue(false),
-      addUser: vi.fn().mockResolvedValue({
-        id: 'user-123',
-        username: 'dicoding',
-        fullname: 'Dicoding Indonesia',
-      }),
-    } as unknown as UserRepository;
+    const mockUserRepository = new UserRepository();
+    const mockPasswordHash = new PasswordHash();
 
-    const mockPasswordHash = {
-      hash: vi.fn().mockResolvedValue('hashed_password'),
-    } as unknown as PasswordHash;
+    mockUserRepository.verifyAvailableUsername = vi
+      .fn()
+      .mockResolvedValue(false);
+    mockUserRepository.addUser = vi.fn().mockResolvedValue({
+      id: 'user-123',
+      username: 'dicoding',
+      fullname: 'Dicoding Indonesia',
+    });
+    mockPasswordHash.hash = vi.fn().mockResolvedValue('hashed_password');
 
     const addUserUseCase = new AddUserUseCase(
       mockUserRepository,
@@ -69,13 +68,13 @@ describe('AddUserUseCase', () => {
     });
 
     expect(mockUserRepository.verifyAvailableUsername).toBeCalledWith(
-      payload.username,
+      'dicoding',
     );
-    expect(mockPasswordHash.hash).toBeCalledWith(payload.password);
+    expect(mockPasswordHash.hash).toBeCalledWith('secret');
     expect(mockUserRepository.addUser).toBeCalledWith({
-      username: payload.username,
+      username: 'dicoding',
       password: 'hashed_password',
-      fullname: payload.fullname,
+      fullname: 'Dicoding Indonesia',
     });
   });
 });

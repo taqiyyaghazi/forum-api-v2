@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import CommentRepository from '../../../Domains/comments/CommentRepository.js';
+import CommentDetail from '../../../Domains/comments/entities/CommentDetail.js';
+import ReplyDetail from '../../../Domains/replies/entities/ReplyDetail.js';
 import ReplyRepository from '../../../Domains/replies/ReplyRepository.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import GetThreadDetailUseCase from '../GetThreadDetailUseCase.js';
@@ -7,11 +9,11 @@ import GetThreadDetailUseCase from '../GetThreadDetailUseCase.js';
 describe('GetThreadDetailUseCase', () => {
   it('should throw error when thread not found', async () => {
     // Arrange
-    const mockThreadRepository = {
-      getThreadById: vi.fn().mockResolvedValue(null),
-    } as unknown as ThreadRepository;
-    const mockCommentRepository = {} as unknown as CommentRepository;
-    const mockReplyRepository = {} as unknown as ReplyRepository;
+    const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
+    const mockReplyRepository = new ReplyRepository();
+
+    mockThreadRepository.getThreadById = vi.fn().mockResolvedValue(null);
 
     const getThreadDetailUseCase = new GetThreadDetailUseCase(
       mockThreadRepository,
@@ -28,116 +30,78 @@ describe('GetThreadDetailUseCase', () => {
 
   it('should orchestrate the get thread detail action correctly', async () => {
     // Arrange
-    const threadId = 'thread-123';
-    const firstCommentId = 'comment-12332323';
-    const secondCommentId = 'comment-12523232';
-    const firstReplyId = 'reply-12332323';
-    const secondReplyId = 'reply-12523232';
-    const expectedDetailThread = {
-      id: threadId,
+    const mockDate = new Date();
+    const mockThread = {
+      id: 'thread-123',
       username: 'ghazi',
       title: 'Judul',
       body: 'Body thread',
-      date: '2021-01-01',
-      comments: [
-        {
-          id: firstCommentId,
-          username: 'johndoe',
-          date: '2021-08-08T07:22:33.555Z',
-          content: 'sebuah comment',
-          replies: [
-            {
-              id: firstReplyId,
-              username: 'johndoe',
-              date: '2021-08-08T07:22:33.555Z',
-              content: 'sebuah reply',
-            },
-            {
-              id: secondReplyId,
-              username: 'dicoding',
-              date: '2021-08-08T07:26:21.338Z',
-              content: '**balasan telah dihapus**',
-            },
-          ],
-        },
-        {
-          id: secondCommentId,
-          username: 'dicoding',
-          date: '2021-08-08T07:26:21.338Z',
-          content: '**komentar telah dihapus**',
-          replies: [
-            {
-              id: firstReplyId,
-              username: 'johndoe',
-              date: '2021-08-08T07:22:33.555Z',
-              content: 'sebuah reply',
-            },
-            {
-              id: secondReplyId,
-              username: 'dicoding',
-              date: '2021-08-08T07:26:21.338Z',
-              content: '**balasan telah dihapus**',
-            },
-          ],
-        },
-      ],
+      date: mockDate,
     };
+    const mockComments = [
+      {
+        id: 'comment-1',
+        username: 'johndoe',
+        date: mockDate,
+        content: 'sebuah comment',
+        isDeleted: false,
+      },
+      {
+        id: 'comment-2',
+        username: 'dicoding',
+        date: mockDate,
+        content: 'komentar yang dihapus',
+        isDeleted: true,
+      },
+    ];
+    const mockReplies = [
+      {
+        id: 'reply-1',
+        username: 'johndoe',
+        date: mockDate,
+        content: 'sebuah reply',
+        isDeleted: false,
+        commentId: 'comment-1',
+      },
+      {
+        id: 'reply-2',
+        username: 'dicoding',
+        date: mockDate,
+        content: 'reply yang sudah dihapus',
+        isDeleted: true,
+        commentId: 'comment-1',
+      },
+      {
+        id: 'reply-3',
+        username: 'johndoe',
+        date: mockDate,
+        content: 'sebuah reply',
+        isDeleted: false,
+        commentId: 'comment-2',
+      },
+      {
+        id: 'reply-4',
+        username: 'dicoding',
+        date: mockDate,
+        content: 'reply yang sudah dihapus',
+        isDeleted: true,
+        commentId: 'comment-2',
+      },
+    ];
 
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
 
-    mockThreadRepository.getThreadById = vi.fn().mockImplementation(() =>
-      Promise.resolve({
-        id: threadId,
-        username: 'ghazi',
-        title: 'Judul',
-        body: 'Body thread',
-        date: '2021-01-01',
-      }),
-    );
+    mockThreadRepository.getThreadById = vi.fn().mockResolvedValue(mockThread);
 
     mockCommentRepository.getCommentsByThreadId = vi
       .fn()
-      .mockImplementation(() =>
-        Promise.resolve([
-          {
-            id: firstCommentId,
-            username: 'johndoe',
-            date: '2021-08-08T07:22:33.555Z',
-            content: 'sebuah comment',
-            isDeleted: false,
-          },
-          {
-            id: secondCommentId,
-            username: 'dicoding',
-            date: '2021-08-08T07:26:21.338Z',
-            content: 'komentar yang dihapus',
-            isDeleted: true,
-          },
-        ]),
-      );
+      .mockResolvedValue(mockComments);
 
-    mockReplyRepository.getRepliesByThreadId = vi.fn().mockImplementation(() =>
-      Promise.resolve([
-        {
-          id: firstReplyId,
-          username: 'johndoe',
-          date: '2021-08-08T07:22:33.555Z',
-          content: 'sebuah reply',
-          isDeleted: false,
-          commentId: firstCommentId,
-        },
-        {
-          id: secondReplyId,
-          username: 'dicoding',
-          date: '2021-08-08T07:26:21.338Z',
-          content: 'reply yang sudah dihapus',
-          isDeleted: true,
-          commentId: firstCommentId,
-        },
-      ]),
-    );
+    mockReplyRepository.getRepliesByThreadId = vi
+      .fn()
+      .mockResolvedValue(mockReplies);
 
     const getThreadDetailUseCase = new GetThreadDetailUseCase(
       mockThreadRepository,
@@ -145,13 +109,28 @@ describe('GetThreadDetailUseCase', () => {
       mockReplyRepository,
     );
 
-    const threadDetail = await getThreadDetailUseCase.execute(threadId);
+    const threadDetail = await getThreadDetailUseCase.execute('thread-123');
 
-    expect(threadDetail).toStrictEqual(expectedDetailThread);
-    expect(mockThreadRepository.getThreadById).toBeCalledWith(threadId);
+    expect(threadDetail.id).toBe('thread-123');
+    expect(threadDetail.title).toBe('Judul');
+    expect(threadDetail.body).toBe('Body thread');
+    expect(threadDetail.date).toBe(mockDate);
+    expect(threadDetail.username).toBe('ghazi');
+    expect(threadDetail.comments).toHaveLength(2);
+    expect(threadDetail.comments[0]).toBeInstanceOf(CommentDetail);
+    expect(threadDetail.comments[1]).toBeInstanceOf(CommentDetail);
+    expect(threadDetail.comments[0].replies).toHaveLength(2);
+    expect(threadDetail.comments[0].replies[0]).toBeInstanceOf(ReplyDetail);
+    expect(threadDetail.comments[0].replies[1]).toBeInstanceOf(ReplyDetail);
+    expect(threadDetail.comments[1].replies).toHaveLength(2);
+    expect(threadDetail.comments[1].replies[0]).toBeInstanceOf(ReplyDetail);
+    expect(threadDetail.comments[1].replies[1]).toBeInstanceOf(ReplyDetail);
+    expect(mockThreadRepository.getThreadById).toBeCalledWith('thread-123');
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
-      threadId,
+      'thread-123',
     );
-    expect(mockReplyRepository.getRepliesByThreadId).toBeCalledWith(threadId);
+    expect(mockReplyRepository.getRepliesByThreadId).toBeCalledWith(
+      'thread-123',
+    );
   });
 });

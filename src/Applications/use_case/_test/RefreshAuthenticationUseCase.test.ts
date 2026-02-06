@@ -10,11 +10,10 @@ describe('RefreshAuthenticationUseCase', () => {
       refreshToken: 'refresh_token',
     };
 
-    const mockTokenManager = {
-      verifyRefreshToken: vi.fn().mockResolvedValue(false),
-    } as unknown as TokenManager;
+    const mockTokenManager = new TokenManager();
+    mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(false);
 
-    const mockAuthenticationRepository = {} as AuthenticationRepository;
+    const mockAuthenticationRepository = new AuthenticationRepository();
 
     const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase(
       mockAuthenticationRepository,
@@ -33,13 +32,13 @@ describe('RefreshAuthenticationUseCase', () => {
       refreshToken: 'refresh_token',
     };
 
-    const mockTokenManager = {
-      verifyRefreshToken: vi.fn().mockResolvedValue(true),
-    } as unknown as TokenManager;
+    const mockTokenManager = new TokenManager();
+    mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(true);
 
-    const mockAuthenticationRepository = {
-      checkAvailabilityToken: vi.fn().mockResolvedValue(false),
-    } as unknown as AuthenticationRepository;
+    const mockAuthenticationRepository = new AuthenticationRepository();
+    mockAuthenticationRepository.checkAvailabilityToken = vi
+      .fn()
+      .mockResolvedValue(false);
 
     const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase(
       mockAuthenticationRepository,
@@ -58,15 +57,19 @@ describe('RefreshAuthenticationUseCase', () => {
       refreshToken: 'refresh_token',
     };
 
-    const mockTokenManager = {
-      verifyRefreshToken: vi.fn().mockResolvedValue(true),
-      decodePayload: vi.fn().mockResolvedValue({ id: 'user-123' }),
-      createAccessToken: vi.fn().mockResolvedValue('new_access_token'),
-    } as unknown as TokenManager;
+    const mockTokenManager = new TokenManager();
+    mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(true);
+    mockTokenManager.decodePayload = vi
+      .fn()
+      .mockResolvedValue({ id: 'user-123' });
+    mockTokenManager.createAccessToken = vi
+      .fn()
+      .mockResolvedValue('new_access_token');
 
-    const mockAuthenticationRepository = {
-      checkAvailabilityToken: vi.fn().mockResolvedValue(true),
-    } as unknown as AuthenticationRepository;
+    const mockAuthenticationRepository = new AuthenticationRepository();
+    mockAuthenticationRepository.checkAvailabilityToken = vi
+      .fn()
+      .mockResolvedValue(true);
 
     const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase(
       mockAuthenticationRepository,
@@ -81,13 +84,11 @@ describe('RefreshAuthenticationUseCase', () => {
       accessToken: 'new_access_token',
     });
 
-    expect(mockTokenManager.verifyRefreshToken).toBeCalledWith(
-      payload.refreshToken,
-    );
+    expect(mockTokenManager.verifyRefreshToken).toBeCalledWith('refresh_token');
     expect(mockAuthenticationRepository.checkAvailabilityToken).toBeCalledWith(
-      payload.refreshToken,
+      'refresh_token',
     );
-    expect(mockTokenManager.decodePayload).toBeCalledWith(payload.refreshToken);
+    expect(mockTokenManager.decodePayload).toBeCalledWith('refresh_token');
     expect(mockTokenManager.createAccessToken).toBeCalledWith({
       id: 'user-123',
     });

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import CommentRepository from '../../../Domains/comments/CommentRepository.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import AddCommentUseCase from '../AddCommentUseCase.js';
+import NewComment from '../../../Domains/comments/entities/NewComment.js';
 
 describe('AddCommentUseCase', () => {
   it('should throw error when thread is not found', async () => {
@@ -12,13 +13,11 @@ describe('AddCommentUseCase', () => {
       owner: 'user-123',
     };
 
-    const mockCommentRepository = {
-      addComment: vi.fn(),
-    } as unknown as CommentRepository;
+    const mockCommentRepository = new CommentRepository();
+    const mockThreadRepository = new ThreadRepository();
 
-    const mockThreadRepository = {
-      verifyThreadExists: vi.fn().mockResolvedValue(false),
-    } as unknown as ThreadRepository;
+    mockThreadRepository.verifyThreadExists = vi.fn().mockResolvedValue(false);
+    mockCommentRepository.addComment = vi.fn().mockResolvedValue(null);
 
     const addCommentUseCase = new AddCommentUseCase(
       mockCommentRepository,
@@ -30,13 +29,13 @@ describe('AddCommentUseCase', () => {
       'ADD_COMMENT_USE_CASE.THREAD_NOT_FOUND',
     );
     expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(
-      payload.threadId,
+      'thread-123',
     );
     expect(mockCommentRepository.addComment).not.toBeCalledWith(
-      expect.objectContaining({
-        content: payload.content,
-        threadId: payload.threadId,
-        owner: payload.owner,
+      new NewComment({
+        content: 'sebuah comment',
+        threadId: 'thread-123',
+        owner: 'user-123',
       }),
     );
   });
@@ -49,19 +48,19 @@ describe('AddCommentUseCase', () => {
       owner: 'user-123',
     };
 
-    const expectedAddedComment = {
+    const mockAddedComment = {
       id: 'comment-123',
-      content: payload.content,
-      owner: payload.owner,
+      content: 'thread-123',
+      owner: 'user-123',
     };
 
-    const mockCommentRepository = {
-      addComment: vi.fn().mockResolvedValue(expectedAddedComment),
-    } as unknown as CommentRepository;
+    const mockCommentRepository = new CommentRepository();
+    const mockThreadRepository = new ThreadRepository();
 
-    const mockThreadRepository = {
-      verifyThreadExists: vi.fn().mockResolvedValue(true),
-    } as unknown as ThreadRepository;
+    mockCommentRepository.addComment = vi
+      .fn()
+      .mockResolvedValue(mockAddedComment);
+    mockThreadRepository.verifyThreadExists = vi.fn().mockResolvedValue(true);
 
     const addCommentUseCase = new AddCommentUseCase(
       mockCommentRepository,
@@ -72,12 +71,16 @@ describe('AddCommentUseCase', () => {
     const result = await addCommentUseCase.execute(payload);
 
     // Assert
-    expect(result).toEqual(expectedAddedComment);
+    expect(result).toEqual({
+      id: 'comment-123',
+      content: 'thread-123',
+      owner: 'user-123',
+    });
     expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(
       payload.threadId,
     );
     expect(mockCommentRepository.addComment).toBeCalledWith(
-      expect.objectContaining({
+      new NewComment({
         content: payload.content,
         threadId: payload.threadId,
         owner: payload.owner,

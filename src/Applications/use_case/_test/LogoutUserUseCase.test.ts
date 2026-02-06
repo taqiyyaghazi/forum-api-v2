@@ -9,10 +9,11 @@ describe('LogoutUserUseCase', () => {
       refreshToken: 'refresh_token',
     };
 
-    const mockAuthenticationRepository = {
-      checkAvailabilityToken: vi.fn().mockResolvedValue(false),
-      deleteToken: vi.fn(),
-    } as unknown as AuthenticationRepository;
+    const mockAuthenticationRepository = new AuthenticationRepository();
+    mockAuthenticationRepository.checkAvailabilityToken = vi
+      .fn()
+      .mockResolvedValue(false);
+    mockAuthenticationRepository.deleteToken = vi.fn();
 
     const logoutUserUseCase = new LogoutUserUseCase(
       mockAuthenticationRepository,
@@ -31,10 +32,13 @@ describe('LogoutUserUseCase', () => {
       refreshToken: 'refresh_token',
     };
 
-    const mockAuthenticationRepository = {
-      checkAvailabilityToken: vi.fn().mockResolvedValue(true),
-      deleteToken: vi.fn().mockResolvedValue(undefined),
-    } as unknown as AuthenticationRepository;
+    const mockAuthenticationRepository = new AuthenticationRepository();
+    mockAuthenticationRepository.checkAvailabilityToken = vi
+      .fn()
+      .mockResolvedValue(true);
+    mockAuthenticationRepository.deleteToken = vi
+      .fn()
+      .mockResolvedValue(undefined);
 
     const logoutUserUseCase = new LogoutUserUseCase(
       mockAuthenticationRepository,

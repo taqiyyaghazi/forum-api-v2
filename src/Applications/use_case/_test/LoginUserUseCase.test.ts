@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import UserLoginUseCase from '../LoginUserUseCase.js';
 import AuthenticationRepository from '../../../Domains/authentications/AuthenticationRepository.js';
-import TokenManager from '../../security/TokenManager.js';
 import UserRepository from '../../../Domains/users/UserRepository.js';
 import PasswordHash from '../../security/PasswordHash.js';
+import TokenManager from '../../security/TokenManager.js';
+import UserLoginUseCase from '../LoginUserUseCase.js';
 
 describe('UserLoginUseCase', () => {
   it('should throw error when user credentials not found', async () => {
@@ -13,13 +13,14 @@ describe('UserLoginUseCase', () => {
       password: 'secret',
     };
 
-    const mockUserRepository = {
-      getCredentialsByUsername: vi.fn().mockResolvedValue(null),
-    } as unknown as UserRepository;
+    const mockUserRepository = new UserRepository();
+    mockUserRepository.getCredentialsByUsername = vi
+      .fn()
+      .mockResolvedValue(null);
 
-    const mockAuthenticationRepository = {} as AuthenticationRepository;
-    const mockTokenManager = {} as TokenManager;
-    const mockPasswordHash = {} as PasswordHash;
+    const mockAuthenticationRepository = new AuthenticationRepository();
+    const mockTokenManager = new TokenManager();
+    const mockPasswordHash = new PasswordHash();
 
     const userLoginUseCase = new UserLoginUseCase(
       mockAuthenticationRepository,
@@ -41,19 +42,17 @@ describe('UserLoginUseCase', () => {
       password: 'secret',
     };
 
-    const mockUserRepository = {
-      getCredentialsByUsername: vi.fn().mockResolvedValue({
-        id: 'user-123',
-        password: 'hashed_password',
-      }),
-    } as unknown as UserRepository;
+    const mockUserRepository = new UserRepository();
+    mockUserRepository.getCredentialsByUsername = vi.fn().mockResolvedValue({
+      id: 'user-123',
+      password: 'hashed_password',
+    });
 
-    const mockPasswordHash = {
-      compare: vi.fn().mockResolvedValue(false),
-    } as unknown as PasswordHash;
+    const mockPasswordHash = new PasswordHash();
+    mockPasswordHash.compare = vi.fn().mockResolvedValue(false);
 
-    const mockAuthenticationRepository = {} as AuthenticationRepository;
-    const mockTokenManager = {} as TokenManager;
+    const mockAuthenticationRepository = new AuthenticationRepository();
+    const mockTokenManager = new TokenManager();
 
     const userLoginUseCase = new UserLoginUseCase(
       mockAuthenticationRepository,
@@ -75,25 +74,27 @@ describe('UserLoginUseCase', () => {
       password: 'secret',
     };
 
-    const mockUserRepository = {
-      getCredentialsByUsername: vi.fn().mockResolvedValue({
-        id: 'user-123',
-        password: 'hashed_password',
-      }),
-    } as unknown as UserRepository;
+    const mockUserRepository = new UserRepository();
+    mockUserRepository.getCredentialsByUsername = vi.fn().mockResolvedValue({
+      id: 'user-123',
+      password: 'hashed_password',
+    });
 
-    const mockPasswordHash = {
-      compare: vi.fn().mockResolvedValue(true),
-    } as unknown as PasswordHash;
+    const mockPasswordHash = new PasswordHash();
+    mockPasswordHash.compare = vi.fn().mockResolvedValue(true);
 
-    const mockTokenManager = {
-      createAccessToken: vi.fn().mockResolvedValue('access_token'),
-      createRefreshToken: vi.fn().mockResolvedValue('refresh_token'),
-    } as unknown as TokenManager;
+    const mockTokenManager = new TokenManager();
+    mockTokenManager.createAccessToken = vi
+      .fn()
+      .mockResolvedValue('access_token');
+    mockTokenManager.createRefreshToken = vi
+      .fn()
+      .mockResolvedValue('refresh_token');
 
-    const mockAuthenticationRepository = {
-      addToken: vi.fn().mockResolvedValue(undefined),
-    } as unknown as AuthenticationRepository;
+    const mockAuthenticationRepository = new AuthenticationRepository();
+    mockAuthenticationRepository.addToken = vi
+      .fn()
+      .mockResolvedValue(undefined);
 
     const userLoginUseCase = new UserLoginUseCase(
       mockAuthenticationRepository,
@@ -112,10 +113,10 @@ describe('UserLoginUseCase', () => {
     });
 
     expect(mockUserRepository.getCredentialsByUsername).toBeCalledWith(
-      payload.username,
+      'dicoding',
     );
     expect(mockPasswordHash.compare).toBeCalledWith(
-      payload.password,
+      'secret',
       'hashed_password',
     );
     expect(mockTokenManager.createAccessToken).toBeCalledWith({
