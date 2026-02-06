@@ -25,6 +25,7 @@ import ThreadRepositoryPostgres from './repository/ThreadRepositoryPostgres.js';
 import UserRepositoryPostgres from './repository/UserRepositoryPostgres.js';
 import BcryptPasswordHash from './security/BcryptPasswordHash.js';
 import JwtTokenManager from './security/JwtTokenManager.js';
+import DeleteCommentUseCase from '../Applications/use_case/DeleteCommentUseCase.js';
 
 const container = createContainer();
 
@@ -253,6 +254,22 @@ container.register([
         {
           name: 'replyRepository',
           internal: ReplyRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: DeleteCommentUseCase.name,
+    Class: DeleteCommentUseCase,
+    parameter: {
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
         },
       ],
     },

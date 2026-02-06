@@ -8,6 +8,7 @@ const createCommentsRouter = (
   const router = express.Router({ mergeParams: true });
 
   router.post('/', authMiddleware, handler.postCommentHandler);
+  router.delete('/:commentId', authMiddleware, handler.deleteCommentHandler);
 
   return router;
 };

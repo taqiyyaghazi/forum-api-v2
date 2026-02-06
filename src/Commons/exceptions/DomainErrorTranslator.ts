@@ -1,4 +1,5 @@
 import AuthenticationError from './AuthenticationError.js';
+import AuthorizationError from './AuthorizationError.js';
 import InvariantError from './InvariantError.js';
 import NotFoundError from './NotFoundError.js';
 
@@ -90,6 +91,12 @@ const directories: ErrorDirectory = {
   ),
   'ADD_REPLY_USE_CASE.COMMENT_NOT_FOUND': new NotFoundError(
     'comment tidak ditemukan',
+  ),
+  'DELETE_COMMENT_USE_CASE.COMMENT_NOT_FOUND': new NotFoundError(
+    'comment tidak ditemukan',
+  ),
+  'DELETE_COMMENT_USE_CASE.COMMENT_NOT_OWNER': new AuthorizationError(
+    'anda tidak berhak menghapus comment ini',
   ),
 };
 

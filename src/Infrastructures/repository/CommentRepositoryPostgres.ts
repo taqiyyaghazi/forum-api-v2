@@ -60,6 +60,26 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     return !!result.rowCount;
   }
+
+  async verifyCommentOwner(commentId: string, owner: string): Promise<boolean> {
+    const query = {
+      text: 'SELECT id FROM comments WHERE id = $1 AND owner = $2',
+      values: [commentId, owner],
+    };
+
+    const result = await this.pool.query(query);
+
+    return !!result.rowCount;
+  }
+
+  async deleteComment(commentId: string): Promise<void> {
+    const query = {
+      text: 'UPDATE comments SET is_deleted = true WHERE id = $1',
+      values: [commentId],
+    };
+
+    await this.pool.query(query);
+  }
 }
 
 export default CommentRepositoryPostgres;

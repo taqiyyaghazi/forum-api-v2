@@ -23,6 +23,17 @@ class CommentRepository {
   async isCommentExist(_commentId: string): Promise<boolean> {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
+
+  async verifyCommentOwner(
+    _commentId: string,
+    _owner: string,
+  ): Promise<boolean> {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
+
+  async deleteComment(_commentId: string): Promise<void> {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
 }
 
 export default CommentRepository;
