@@ -6,6 +6,7 @@ import users from '../../Interfaces/users/index.js';
 import authentications from '../../Interfaces/authentications/index.js';
 import threads from '../../Interfaces/threads/index.js';
 import comments from '../../Interfaces/comments/index.js';
+import replies from '../../Interfaces/replies/index.js';
 
 const createServer = async (container: Container): Promise<Application> => {
   const app = express();
@@ -16,6 +17,7 @@ const createServer = async (container: Container): Promise<Application> => {
   app.use('/authentications', authentications(container));
   app.use('/threads', threads(container));
   app.use('/threads/:threadId/comments', comments(container));
+  app.use('/threads/:threadId/comments/:commentId/replies', replies(container));
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {

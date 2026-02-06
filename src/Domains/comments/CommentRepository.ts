@@ -8,9 +8,7 @@ class CommentRepository {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async getCommentsByThreadId(
-    _threadId: string,
-  ): Promise<
+  async getCommentsByThreadId(_threadId: string): Promise<
     {
       id: string;
       username: string;
@@ -19,6 +17,10 @@ class CommentRepository {
       isDeleted: boolean;
     }[]
   > {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
+
+  async isCommentExist(_commentId: string): Promise<boolean> {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 }

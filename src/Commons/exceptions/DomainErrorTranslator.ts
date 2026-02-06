@@ -79,6 +79,18 @@ const directories: ErrorDirectory = {
   'GET_THREAD_DETAIL_USE_CASE.THREAD_NOT_FOUND': new NotFoundError(
     'thread tidak ditemukan',
   ),
+  'NEW_REPLY.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'tidak dapat membuat balasan baru karena properti yang dibutuhkan tidak ada',
+  ),
+  'NEW_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'tidak dapat membuat balasan baru karena tipe data tidak sesuai',
+  ),
+  'ADD_REPLY_USE_CASE.THREAD_NOT_FOUND': new NotFoundError(
+    'thread tidak ditemukan',
+  ),
+  'ADD_REPLY_USE_CASE.COMMENT_NOT_FOUND': new NotFoundError(
+    'comment tidak ditemukan',
+  ),
 };
 
 const DomainErrorTranslator = {

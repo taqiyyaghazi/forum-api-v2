@@ -32,6 +32,7 @@ describe('CommentDetail entity', () => {
       date: '2021-08-08T07:22:33.555Z',
       content: 'sebuah comment',
       isDeleted: false,
+      replies: [],
     } as unknown as CommentDetailPayload;
 
     // Action & Assert
@@ -44,10 +45,11 @@ describe('CommentDetail entity', () => {
     // Arrange
     const payload = {
       id: 'comment-123',
-      username: 'johndoe',
+      username: 'dicoding',
       date: new Date(),
       content: 'sebuah comment',
       isDeleted: false,
+      replies: [],
     };
 
     // Action
@@ -59,6 +61,7 @@ describe('CommentDetail entity', () => {
     expect(commentDetail.username).toEqual(payload.username);
     expect(commentDetail.date).toEqual(payload.date);
     expect(commentDetail.content).toEqual(payload.content);
+    expect(commentDetail.replies).toEqual(payload.replies);
   });
 
   it('should create deleted commentDetail object correctly', () => {
@@ -69,6 +72,7 @@ describe('CommentDetail entity', () => {
       date: new Date(),
       content: 'sebuah comment',
       isDeleted: true,
+      replies: [],
     };
 
     // Action
