@@ -4,7 +4,7 @@
   "type": "module",
   "main": "dist/app.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "start": "node dist/app.js",
     "dev": "nodemon --exec tsx src/app.ts",
     "test": "vitest --run",
