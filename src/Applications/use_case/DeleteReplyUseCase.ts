@@ -19,9 +19,11 @@ class DeleteReplyUseCase {
       commentId,
       threadId,
     );
+
     if (!isReplyExists) {
       throw new Error('DELETE_REPLY_USE_CASE.REPLY_NOT_FOUND');
     }
+    
     const isReplyOwner = await this.replyRepository.verifyReplyOwner(
       replyId,
       owner,

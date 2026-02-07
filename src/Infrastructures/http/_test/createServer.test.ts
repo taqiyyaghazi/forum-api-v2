@@ -1,11 +1,13 @@
-import request from 'supertest';
-import pool from '../../database/postgres/pool.js';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
-import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableTestHelper.js';
-import container from '../../container.js';
-import createServer from '../createServer.js';
-import TokenManager from '../../../Applications/security/TokenManager.js';
 import { Container } from 'instances-container';
+import request from 'supertest';
+import { afterAll, afterEach, describe, expect, it } from 'vitest';
+import TokenManager from '../../../Applications/security/TokenManager.js';
+import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableTestHelper.js';
+import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper.js';
+import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
+import container from '../../container.js';
+import pool from '../../database/postgres/pool.js';
+import createServer from '../createServer.js';
 
 describe('HTTP server', () => {
   afterAll(async () => {
@@ -13,6 +15,7 @@ describe('HTTP server', () => {
   });
 
   afterEach(async () => {
+    await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
     await AuthenticationsTableTestHelper.cleanTable();
   });
@@ -360,6 +363,79 @@ describe('HTTP server', () => {
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
       expect(response.body.message).toEqual('harus mengirimkan token refresh');
+    });
+  });
+
+  describe('when POST /threads', () => {
+    it('should response 401 if authentication not valid', async () => {
+      const app = await createServer(container);
+
+      const response = await request(app).post('/threads').send({
+        title: 'A Thread Title',
+        body: 'Thread body content',
+      });
+
+      expect(response.status).toEqual(401);
+      expect(response.body.status).toEqual('fail');
+      expect(response.body.message).toEqual('Missing authentication');
+    });
+
+    it('should response 400 if payload not contain needed property', async () => {
+      const app = await createServer(container);
+
+      await request(app).post('/users').send({
+        username: 'dicoding',
+        password: 'secret',
+        fullname: 'Dicoding Indonesia',
+      });
+
+      const loginResponse = await request(app).post('/authentications').send({
+        username: 'dicoding',
+        password: 'secret',
+      });
+
+      const accessToken = loginResponse.body.data.accessToken;
+
+      const response = await request(app)
+        .post('/threads')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          body: 'Thread body content',
+        });
+
+      expect(response.status).toEqual(400);
+      expect(response.body.status).toEqual('fail');
+      expect(response.body.message).toEqual(
+        'tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada',
+      );
+    });
+
+    it('should response 201 if thread created', async () => {
+      const app = await createServer(container);
+      await request(app).post('/users').send({
+        username: 'dicoding',
+        password: 'secret',
+        fullname: 'Dicoding Indonesia',
+      });
+
+      const loginResponse = await request(app).post('/authentications').send({
+        username: 'dicoding',
+        password: 'secret',
+      });
+
+      const accessToken = loginResponse.body.data.accessToken;
+
+      const response = await request(app)
+        .post('/threads')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          title: 'A Thread Title',
+          body: 'Thread body content',
+        });
+
+      expect(response.status).toEqual(201);
+      expect(response.body.status).toEqual('success');
+      expect(response.body.data.addedThread).toBeDefined();
     });
   });
 

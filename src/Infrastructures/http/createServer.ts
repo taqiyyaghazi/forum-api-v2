@@ -21,6 +21,7 @@ const createServer = async (container: Container): Promise<Application> => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
+    console.log(error);
     const translatedError = DomainErrorTranslator.translate(error);
 
     if (translatedError instanceof ClientError) {
