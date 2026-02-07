@@ -1,9 +1,9 @@
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
 import NewReply from '../../../Domains/replies/entities/NewReply';
-import CommentsTableTestHelper from '../../../tests/CommentsTableTestHelper';
-import RepliesTableTestHelper from '../../../tests/RepliesTableTestHelper';
-import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper';
+import CommentsTableTestHelper from '../../../../tests/CommentsTableTestHelper';
+import RepliesTableTestHelper from '../../../../tests/RepliesTableTestHelper';
+import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper';
 import pool from '../../database/postgres/pool';
 import ReplyRepositoryPostgres from '../ReplyRepositoryPostgres';
 

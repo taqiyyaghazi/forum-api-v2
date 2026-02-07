@@ -1,6 +1,6 @@
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
 import RegisterUser from '../../../Domains/users/entities/RegisterUser.js';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import pool from '../../database/postgres/pool.js';
 import UserRepositoryPostgres from '../UserRepositoryPostgres.js';
 

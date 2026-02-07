@@ -2,7 +2,7 @@ import { afterAll, afterEach, describe, expect, it } from 'vitest';
 import createServer from '../createServer';
 import container from '../../container';
 import request from 'supertest';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper';
 import pool from '../../database/postgres/pool';
 
 describe('Users', () => {

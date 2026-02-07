@@ -4,6 +4,6 @@
     "noEmit": true,
     "rootDir": "."
   },
-  "include": ["src/**/*", "*.ts", "*.mts", "migrations/**/*"],
+  "include": ["src/**/*", "*.ts", "*.mts", "migrations/**/*", "tests/**/*"],
   "exclude": ["node_modules", "dist"]
 }

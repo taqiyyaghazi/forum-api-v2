@@ -1,4 +1,4 @@
-import pool from '../Infrastructures/database/postgres/pool.js';
+import pool from '../src/Infrastructures/database/postgres/pool.js';
 
 const RepliesTableTestHelper = {
   async cleanTable(): Promise<void> {

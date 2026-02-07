@@ -1,7 +1,7 @@
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
-import CommentsTableTestHelper from '../../../tests/CommentsTableTestHelper.js';
-import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper.js';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
+import CommentsTableTestHelper from '../../../../tests/CommentsTableTestHelper.js';
+import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import NewComment from '../../../Domains/comments/entities/NewComment.js';
 import AddedComment from '../../../Domains/comments/entities/AddedComment.js';
 import pool from '../../database/postgres/pool.js';

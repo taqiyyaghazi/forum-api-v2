@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
 import TokenManager from '../../../Applications/security/TokenManager';
-import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableTestHelper';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper';
+import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper';
 import container from '../../container';
 import pool from '../../database/postgres/pool';
 import createServer from '../createServer';

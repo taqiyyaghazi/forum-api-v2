@@ -1,7 +1,7 @@
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
 import NewThread from '../../../Domains/threads/entities/NewThread.js';
-import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper.js';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
+import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import pool from '../../database/postgres/pool.js';
 import ThreadRepositoryPostgres from '../ThreadRepositoryPostgres.js';
 

@@ -1,5 +1,5 @@
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
-import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableTestHelper.js';
+import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper.js';
 import pool from '../../database/postgres/pool.js';
 import AuthenticationRepositoryPostgres from '../AuthenticationRepositoryPostgres.js';
 

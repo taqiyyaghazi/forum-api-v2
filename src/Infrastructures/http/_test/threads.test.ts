@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
-import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper';
-import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableTestHelper';
+import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper';
+import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper';
 import pool from '../../database/postgres/pool';
 import createServer from '../createServer';
 import container from '../../container';

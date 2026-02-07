@@ -1,9 +1,9 @@
 import { Container } from 'instances-container';
 import request from 'supertest';
 import { afterAll, afterEach, describe, expect, it } from 'vitest';
-import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableTestHelper.js';
-import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper.js';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper.js';
+import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper.js';
+import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import container from '../../container.js';
 import pool from '../../database/postgres/pool.js';
 import createServer from '../createServer.js';

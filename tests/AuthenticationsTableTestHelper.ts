@@ -1,4 +1,4 @@
-import pool from '../Infrastructures/database/postgres/pool.js';
+import pool from '../src/Infrastructures/database/postgres/pool.js';
 
 interface Authentication {
   token: string;

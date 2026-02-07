@@ -1,13 +1,13 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
-import CommentsTableTestHelper from '../../../tests/CommentsTableTestHelper';
-import ThreadsTableTestHelper from '../../../tests/ThreadsTableTestHelper';
-import UsersTableTestHelper from '../../../tests/UsersTableTestHelper';
-import AuthenticationsTableTestHelper from '../../../tests/AuthenticationsTableTestHelper';
+import CommentsTableTestHelper from '../../../../tests/CommentsTableTestHelper';
+import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper';
+import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper';
 import pool from '../../database/postgres/pool';
 import createServer from '../createServer';
 import container from '../../container';
 import request from 'supertest';
-import RepliesTableTestHelper from '../../../tests/RepliesTableTestHelper';
+import RepliesTableTestHelper from '../../../../tests/RepliesTableTestHelper';
 
 describe('Replies', () => {
   const user = {
