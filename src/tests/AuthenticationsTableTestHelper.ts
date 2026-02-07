@@ -14,7 +14,7 @@ const AuthenticationsTableTestHelper = {
     await pool.query(query);
   },
 
-  async findToken(token: string): Promise<Authentication[]> {
+  async findToken(token: string): Promise<Authentication | undefined> {
     const query = {
       text: 'SELECT token FROM authentications WHERE token = $1',
       values: [token],
@@ -22,7 +22,7 @@ const AuthenticationsTableTestHelper = {
 
     const result = await pool.query(query);
 
-    return result.rows;
+    return result.rows[0];
   },
 
   async cleanTable(): Promise<void> {

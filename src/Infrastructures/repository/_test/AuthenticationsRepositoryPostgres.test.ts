@@ -22,8 +22,8 @@ describe('AuthenticationRepositoryPostgres', () => {
 
     // Assert
     const tokens = await AuthenticationsTableTestHelper.findToken(token);
-    expect(tokens).toHaveLength(1);
-    expect(tokens[0].token).toBe(token);
+    expect(tokens).toBeDefined();
+    expect(tokens?.token).toBe(token);
   });
 
   it('should check availability token correctly', async () => {
@@ -51,6 +51,6 @@ describe('AuthenticationRepositoryPostgres', () => {
 
     // Assert
     const tokens = await AuthenticationsTableTestHelper.findToken(token);
-    expect(tokens).toHaveLength(0);
+    expect(tokens).toBeUndefined();
   });
 });

@@ -29,7 +29,7 @@ const ThreadsTableTestHelper = {
     await pool.query(query);
   },
 
-  async findThreadById(id: string): Promise<Thread[]> {
+  async findThreadById(id: string): Promise<Thread | undefined> {
     const query = {
       text: 'SELECT * FROM threads WHERE id = $1',
       values: [id],
@@ -37,7 +37,7 @@ const ThreadsTableTestHelper = {
 
     const result = await pool.query(query);
 
-    return result.rows;
+    return result.rows[0];
   },
 
   async cleanTable(): Promise<void> {

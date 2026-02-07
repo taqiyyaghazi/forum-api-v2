@@ -76,4 +76,29 @@ describe('config', () => {
     // Cleanup
     process.env.PORT = originalPort;
   });
+
+  it('should use default port 5000 when PORT is undefined', async () => {
+    // Arrange
+    const originalEnv = process.env.NODE_ENV;
+    const originalPort = process.env.PORT;
+
+    const dotenvSpy = vi
+      .spyOn(dotenv, 'config')
+      .mockImplementation(() => ({ parsed: {} }));
+
+    delete process.env.PORT;
+
+    vi.resetModules();
+
+    // Action
+    const { default: configDefault } = await import('../config.js');
+
+    // Assert
+    expect(configDefault.app.port).toBe(5000);
+
+    // Cleanup
+    dotenvSpy.mockRestore();
+    process.env.NODE_ENV = originalEnv;
+    process.env.PORT = originalPort;
+  });
 });

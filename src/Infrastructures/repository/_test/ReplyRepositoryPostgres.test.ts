@@ -51,11 +51,11 @@ describe('ReplyRepositoryPostgres', () => {
 
     // Assert
     const replies = await RepliesTableTestHelper.findReplyById('reply-123');
-    expect(replies).toHaveLength(1);
-    expect(replies[0].content).toBe('reply');
-    expect(replies[0].owner).toBe('user-123');
-    expect(replies[0].comment_id).toBe('comment-123');
-    expect(replies[0].is_deleted).toBe(false);
+    expect(replies).toBeDefined();
+    expect(replies?.content).toBe('reply');
+    expect(replies?.owner).toBe('user-123');
+    expect(replies?.comment_id).toBe('comment-123');
+    expect(replies?.is_deleted).toBe(false);
   });
 
   it('should get replies by thread id correctly', async () => {
@@ -245,7 +245,7 @@ describe('ReplyRepositoryPostgres', () => {
 
     // Assert
     const replies = await RepliesTableTestHelper.findReplyById(replyId);
-    expect(replies).toHaveLength(1);
-    expect(replies[0].is_deleted).toBe(true);
+    expect(replies).toBeDefined();
+    expect(replies?.is_deleted).toBe(true);
   });
 });

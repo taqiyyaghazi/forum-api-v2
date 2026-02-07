@@ -16,11 +16,7 @@ const createAuthMiddleware = (container: Container) => {
         throw new AuthenticationError('Missing authentication');
       }
 
-      const token = authHeader.replace('Bearer ', '');
-
-      if (!token) {
-        throw new AuthenticationError('Missing authentication');
-      }
+      const token = authHeader.replace(/^Bearer\s+/, '');
 
       const tokenManager = container.getInstance(
         TokenManager.name,

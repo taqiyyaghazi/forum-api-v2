@@ -27,7 +27,7 @@ const UsersTableTestHelper = {
     await pool.query(query);
   },
 
-  async findUserById(id: string): Promise<User[]> {
+  async findUserById(id: string): Promise<User | undefined> {
     const query = {
       text: 'SELECT * FROM users WHERE id = $1',
       values: [id],
@@ -35,7 +35,7 @@ const UsersTableTestHelper = {
 
     const result = await pool.query(query);
 
-    return result.rows;
+    return result.rows[0];
   },
 
   async cleanTable(): Promise<void> {

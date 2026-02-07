@@ -34,10 +34,10 @@ describe('ThreadRepositoryPostgres', () => {
 
     // Assert
     const thread = await ThreadsTableTestHelper.findThreadById('thread-123');
-    expect(thread).toHaveLength(1);
-    expect(thread[0].title).toBe('A Thread Title');
-    expect(thread[0].body).toBe('Thread body content');
-    expect(thread[0].owner).toBe('user-thread-124');
+    expect(thread).toBeDefined();
+    expect(thread?.title).toBe('A Thread Title');
+    expect(thread?.body).toBe('Thread body content');
+    expect(thread?.owner).toBe('user-thread-124');
   });
 
   it('should verify thread exists correctly', async () => {

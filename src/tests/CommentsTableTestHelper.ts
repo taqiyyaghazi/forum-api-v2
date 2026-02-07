@@ -25,14 +25,15 @@ const CommentsTableTestHelper = {
     thread_id: string;
     is_deleted: boolean;
     date: Date;
-  }[]> {
+  } | undefined> {
     const query = {
       text: 'SELECT * FROM comments WHERE id = $1',
       values: [id],
     };
 
     const result = await pool.query(query);
-    return result.rows;
+    
+    return result.rows[0];
   },
 
   async cleanTable(): Promise<void> {

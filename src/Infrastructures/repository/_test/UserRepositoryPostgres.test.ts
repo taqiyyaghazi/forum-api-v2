@@ -42,9 +42,9 @@ describe('UserRepositoryPostgres', () => {
 
     // Assert
     const user = await UsersTableTestHelper.findUserById('user-123');
-    expect(user).toHaveLength(1);
-    expect(user[0].username).toBe('dicoding');
-    expect(user[0].fullname).toBe('Dicoding');
+    expect(user).toBeDefined();
+    expect(user?.username).toBe('dicoding');
+    expect(user?.fullname).toBe('Dicoding');
   });
 
   it('should return user credentials when username available', async () => {

@@ -53,7 +53,8 @@ describe('CommentRepositoryPostgres', () => {
 
     const comment =
       await CommentsTableTestHelper.findCommentById('comment-123');
-    expect(comment).toHaveLength(1);
+    expect(comment).toBeDefined();
+    expect(comment?.content).toBe('sebuah comment');
   });
 
   it('should get comments by thread id correctly', async () => {
@@ -215,7 +216,7 @@ describe('CommentRepositoryPostgres', () => {
     const comment = await CommentsTableTestHelper.findCommentById(
       'comment-123',
     );
-    expect(comment).toHaveLength(1);
-    expect(comment[0].is_deleted).toBe(true);
+    expect(comment).toBeDefined();
+    expect(comment?.is_deleted).toBe(true);
   });
 });

@@ -13,7 +13,7 @@ const RepliesTableTestHelper = {
       comment_id: string;
       date: Date;
       is_deleted: boolean;
-    }[]
+    } | undefined
   > {
     const query = {
       text: 'SELECT * FROM replies WHERE id = $1',
@@ -21,7 +21,8 @@ const RepliesTableTestHelper = {
     };
 
     const result = await pool.query(query);
-    return result.rows;
+
+    return result.rows[0];
   },
 
   async addReply({
