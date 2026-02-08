@@ -14,13 +14,12 @@ class ToggleLikeCommentUseCase {
   ) {}
 
   async execute(payload: ToggleLikeCommentUseCasePayload): Promise<void> {
-    const { threadId, commentId, userId } = payload;
+    const { commentId, userId, threadId } = payload;
 
     const isCommentAvailable =
-      await this.commentRepository.checkCommentAvailability(
+      await this.commentRepository.verifyCommentAvailability(
         commentId,
         threadId,
-        userId,
       );
 
     if (!isCommentAvailable) {

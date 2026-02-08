@@ -17,7 +17,7 @@ describe('ToggleLikeCommentUseCase', () => {
     const mockLikeRepository = new LikeRepository();
     const mockCommentRepository = new CommentRepository();
 
-    mockCommentRepository.checkCommentAvailability = vi
+    mockCommentRepository.verifyCommentAvailability = vi
       .fn()
       .mockResolvedValue(false);
 
@@ -43,7 +43,7 @@ describe('ToggleLikeCommentUseCase', () => {
     const mockLikeRepository = new LikeRepository();
     const mockCommentRepository = new CommentRepository();
 
-    mockCommentRepository.checkCommentAvailability = vi
+    mockCommentRepository.verifyCommentAvailability = vi
       .fn()
       .mockResolvedValue(true);
     mockLikeRepository.checkLikeStatus = vi.fn().mockResolvedValue(false);
@@ -59,10 +59,9 @@ describe('ToggleLikeCommentUseCase', () => {
     await toggleLikeCommentUseCase.execute(payload);
 
     // Assert
-    expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith(
+    expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith(
       payload.commentId,
       payload.threadId,
-      payload.userId,
     );
     expect(mockLikeRepository.checkLikeStatus).toBeCalledWith(
       payload.userId,
@@ -86,7 +85,7 @@ describe('ToggleLikeCommentUseCase', () => {
     const mockLikeRepository = new LikeRepository();
     const mockCommentRepository = new CommentRepository();
 
-    mockCommentRepository.checkCommentAvailability = vi
+    mockCommentRepository.verifyCommentAvailability = vi
       .fn()
       .mockResolvedValue(true);
     mockLikeRepository.checkLikeStatus = vi.fn().mockResolvedValue(true);
@@ -102,10 +101,9 @@ describe('ToggleLikeCommentUseCase', () => {
     await toggleLikeCommentUseCase.execute(payload);
 
     // Assert
-    expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith(
+    expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith(
       payload.commentId,
       payload.threadId,
-      payload.userId,
     );
     expect(mockLikeRepository.checkLikeStatus).toBeCalledWith(
       payload.userId,

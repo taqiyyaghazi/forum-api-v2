@@ -116,12 +116,28 @@ describe('Thread', () => {
           body: 'Thread body content',
         });
 
-      await request(app)
+      const commentResponse = await request(app)
         .post(`/threads/${threadResponse.body.data.addedThread.id}/comments`)
         .set('Authorization', `Bearer ${accessToken}`)
         .send({
           content: 'A comment content',
         });
+
+      await request(app)
+        .post(
+          `/threads/${threadResponse.body.data.addedThread.id}/comments/${commentResponse.body.data.addedComment.id}/replies`,
+        )
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          content: 'A reply content',
+        });
+
+      await request(app)
+        .put(
+          `/threads/${threadResponse.body.data.addedThread.id}/comments/${commentResponse.body.data.addedComment.id}/likes`,
+        )
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send();
 
       const response = await request(app).get(
         `/threads/${threadResponse.body.data.addedThread.id}`,
@@ -138,6 +154,15 @@ describe('Thread', () => {
       expect(response.body.data.thread.comments[0].content).toBe(
         'A comment content',
       );
+      expect(response.body.data.thread.comments[0].replies).toHaveLength(1);
+      expect(response.body.data.thread.comments[0].replies[0]).toBeDefined();
+      expect(response.body.data.thread.comments[0].replies[0].username).toBe(
+        user.username,
+      );
+      expect(response.body.data.thread.comments[0].replies[0].content).toBe(
+        'A reply content',
+      );
+      expect(response.body.data.thread.comments[0].likeCount).toBe(1);
     });
   });
 });

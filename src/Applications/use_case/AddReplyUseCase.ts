@@ -29,10 +29,10 @@ class AddReplyUseCase {
       throw new Error('ADD_REPLY_USE_CASE.THREAD_NOT_FOUND');
     }
 
-    const isCommentExist =
-      await this.commentRepository.isCommentExist(commentId);
+    const isCommentAvailable =
+      await this.commentRepository.verifyCommentAvailability(commentId, threadId);
 
-    if (!isCommentExist) {
+    if (!isCommentAvailable) {
       throw new Error('ADD_REPLY_USE_CASE.COMMENT_NOT_FOUND');
     }
 

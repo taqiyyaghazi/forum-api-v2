@@ -32,14 +32,17 @@ class CommentRepositoryPostgres extends CommentRepository {
       date: Date;
       content: string;
       isDeleted: boolean;
+      likeCount: number;
     }[]
   > {
     const query = {
       text: `
-        SELECT comments.id, users.username, comments.date, comments.content, comments.is_deleted as "isDeleted"
+        SELECT comments.id, users.username, comments.date, comments.content, comments.is_deleted as "isDeleted", COUNT(likes.id)::int AS "likeCount"
         FROM comments
         INNER JOIN users ON comments.owner = users.id
+        LEFT JOIN likes ON comments.id = likes.comment_id
         WHERE comments.thread_id = $1
+        GROUP BY comments.id, users.username
         ORDER BY comments.date ASC
       `,
       values: [threadId],
@@ -50,25 +53,13 @@ class CommentRepositoryPostgres extends CommentRepository {
     return result.rows;
   }
 
-  async isCommentExist(commentId: string): Promise<boolean> {
-    const query = {
-      text: 'SELECT id FROM comments WHERE id = $1',
-      values: [commentId],
-    };
-
-    const result = await this.pool.query(query);
-
-    return !!result.rowCount;
-  }
-
-  async checkCommentAvailability(
+  async verifyCommentAvailability(
     commentId: string,
     threadId: string,
-    owner: string,
   ): Promise<boolean> {
     const query = {
-      text: 'SELECT id FROM comments WHERE id = $1 AND thread_id = $2 AND owner = $3',
-      values: [commentId, threadId, owner],
+      text: 'SELECT id FROM comments WHERE id = $1 AND thread_id = $2',
+      values: [commentId, threadId],
     };
 
     const result = await this.pool.query(query);

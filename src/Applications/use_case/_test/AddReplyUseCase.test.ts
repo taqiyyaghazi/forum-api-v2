@@ -35,7 +35,9 @@ describe('AddReplyUseCase', () => {
     const mockThreadRepository = new ThreadRepository();
 
     mockReplyRepository.addReply = vi.fn().mockResolvedValue(mockAddedReply);
-    mockCommentRepository.isCommentExist = vi.fn().mockResolvedValue(true);
+    mockCommentRepository.verifyCommentAvailability = vi
+      .fn()
+      .mockResolvedValue(true);
     mockThreadRepository.verifyThreadExists = vi.fn().mockResolvedValue(true);
 
     const addReplyUseCase = new AddReplyUseCase(
@@ -53,9 +55,9 @@ describe('AddReplyUseCase', () => {
     expect(mockThreadRepository.verifyThreadExists).toHaveBeenCalledWith(
       'thread-123',
     );
-    expect(mockCommentRepository.isCommentExist).toHaveBeenCalledWith(
-      'comment-123',
-    );
+    expect(
+      mockCommentRepository.verifyCommentAvailability,
+    ).toHaveBeenCalledWith('comment-123', 'thread-123');
     expect(mockReplyRepository.addReply).toHaveBeenCalledWith(
       new NewReply({ content: 'new reply' }),
       'comment-123',
@@ -108,7 +110,9 @@ describe('AddReplyUseCase', () => {
     const mockThreadRepository = new ThreadRepository();
 
     mockThreadRepository.verifyThreadExists = vi.fn().mockResolvedValue(true);
-    mockCommentRepository.isCommentExist = vi.fn().mockResolvedValue(false);
+    mockCommentRepository.verifyCommentAvailability = vi
+      .fn()
+      .mockResolvedValue(false);
 
     const addReplyUseCase = new AddReplyUseCase(
       mockReplyRepository,
