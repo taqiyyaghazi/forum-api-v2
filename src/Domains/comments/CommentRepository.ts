@@ -24,6 +24,10 @@ class CommentRepository {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
+  async checkCommentAvailability(_commentId: string, _threadId: string, _owner: string): Promise<boolean> {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
+
   async verifyCommentOwner(
     _commentId: string,
     _owner: string,

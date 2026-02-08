@@ -7,6 +7,7 @@ import createServer from '../createServer';
 import container from '../../container';
 import request from 'supertest';
 import CommentsTableTestHelper from '../../../../tests/CommentsTableTestHelper';
+import LikesTableTestHelper from '../../../../tests/LikesTableTestHelper';
 
 describe('Comments', () => {
   const user = {
@@ -17,6 +18,7 @@ describe('Comments', () => {
   let accessToken: string;
 
   afterEach(async () => {
+    await LikesTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanTable();
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
@@ -171,6 +173,76 @@ describe('Comments', () => {
       expect(response.body.status).toEqual('success');
       expect(comment).toBeDefined();
       expect(comment?.is_deleted).toBe(true);
+    });
+  });
+
+  describe('when PUT /threads/:threadId/comments/:commentId/likes', () => {
+    let threadId: string;
+    let commentId: string;
+
+    beforeEach(async () => {
+      const app = await createServer(container);
+
+      const threadResponse = await request(app)
+        .post('/threads')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          title: 'A Thread Title',
+          body: 'Thread body content',
+        });
+
+      threadId = threadResponse.body.data.addedThread.id;
+
+      const commentResponse = await request(app)
+        .post(`/threads/${threadId}/comments`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+          content: 'A comment content',
+        });
+
+      commentId = commentResponse.body.data.addedComment.id;
+    });
+
+    it('should throw error 401 when if not contain access token', async () => {
+      const app = await createServer(container);
+
+      const response = await request(app).put(
+        `/threads/${threadId}/comments/${commentId}/likes`,
+      );
+
+      expect(response.status).toEqual(401);
+      expect(response.body.status).toEqual('fail');
+      expect(response.body.message).toEqual('Missing authentication');
+    });
+
+    it('should like comment when comment not liked', async () => {
+      const app = await createServer(container);
+
+      const response = await request(app)
+        .put(`/threads/${threadId}/comments/${commentId}/likes`)
+        .set('Authorization', `Bearer ${accessToken}`);
+
+      const like = await LikesTableTestHelper.findLikeByCommentId(commentId);
+      expect(like).toBeDefined();
+      expect(response.status).toEqual(200);
+      expect(response.body.status).toEqual('success');
+    });
+
+    it('should unlike comment when comment liked', async () => {
+      const app = await createServer(container);
+
+      await request(app)
+        .put(`/threads/${threadId}/comments/${commentId}/likes`)
+        .set('Authorization', `Bearer ${accessToken}`);
+
+      const response = await request(app)
+        .put(`/threads/${threadId}/comments/${commentId}/likes`)
+        .set('Authorization', `Bearer ${accessToken}`);
+
+      const like = await LikesTableTestHelper.findLikeByCommentId(commentId);
+      expect(like).toBeUndefined();
+      expect(response.status).toEqual(200);
+      expect(response.body.status).toEqual('success');
     });
   });
 });

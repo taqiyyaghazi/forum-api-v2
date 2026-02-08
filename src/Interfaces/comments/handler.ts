@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { Container } from 'instances-container';
 import AddCommentUseCase from '../../Applications/use_case/AddCommentUseCase.js';
 import DeleteCommentUseCase from '../../Applications/use_case/DeleteCommentUseCase.js';
+import ToggleLikeCommentUseCase from '../../Applications/use_case/ToggleLikeCommentUseCase.js';
 
 class CommentsHandler {
   constructor(private readonly container: Container) {
@@ -51,6 +52,25 @@ class CommentsHandler {
       data: {
         deletedComment,
       },
+    });
+  }
+
+  async putLikeCommentHandler(req: Request<{ commentId: string; threadId: string }>, res: Response): Promise<void> {
+    const toggleLikeCommentUseCase = this.container.getInstance(
+      ToggleLikeCommentUseCase.name,
+    ) as ToggleLikeCommentUseCase;
+
+    const { commentId, threadId } = req.params;
+    const { id: userId } = req.auth!;
+
+    await toggleLikeCommentUseCase.execute({
+      threadId,
+      commentId,
+      userId,
+    });
+
+    res.status(200).json({
+      status: 'success',
     });
   }
 }

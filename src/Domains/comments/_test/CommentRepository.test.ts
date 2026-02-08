@@ -28,5 +28,8 @@ describe('CommentRepository interface', () => {
     await expect(
       commentRepository.isCommentExist('comment-123'),
     ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+    await expect(
+      commentRepository.checkCommentAvailability('comment-123', 'thread-123', 'user-123'),
+    ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   });
 });

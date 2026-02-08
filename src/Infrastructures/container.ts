@@ -27,6 +27,9 @@ import BcryptPasswordHash from './security/BcryptPasswordHash.js';
 import JwtTokenManager from './security/JwtTokenManager.js';
 import DeleteCommentUseCase from '../Applications/use_case/DeleteCommentUseCase.js';
 import DeleteReplyUseCase from '../Applications/use_case/DeleteReplyUseCase.js';
+import LikeRepository from '../Domains/likes/LikeRepository.js';
+import LikeRepositoryPostgres from './repository/LikeRepositoryPostgres.js';
+import ToggleLikeCommentUseCase from '../Applications/use_case/ToggleLikeCommentUseCase.js';
 
 const container = createContainer();
 
@@ -87,6 +90,20 @@ container.register([
   {
     key: CommentRepository.name,
     Class: CommentRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: LikeRepository.name,
+    Class: LikeRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -284,6 +301,22 @@ container.register([
           name: 'replyRepository',
           internal: ReplyRepository.name,
         },
+      ],
+    },
+  },
+  {
+    key: ToggleLikeCommentUseCase.name,
+    Class: ToggleLikeCommentUseCase,
+    parameter: {
+      dependencies: [
+        {
+          name: 'likeRepository',
+          internal: LikeRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
+        }
       ],
     },
   },
