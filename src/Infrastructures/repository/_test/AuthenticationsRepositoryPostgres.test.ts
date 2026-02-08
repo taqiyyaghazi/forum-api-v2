@@ -26,6 +26,19 @@ describe('AuthenticationRepositoryPostgres', () => {
     expect(tokens?.token).toBe(token);
   });
 
+  it('should return false when token is not available', async () => {
+    // Arrange
+    const authenticationRepository = new AuthenticationRepositoryPostgres(pool);
+    const token = 'token';
+
+    // Action
+    const isAvailable =
+      await authenticationRepository.checkAvailabilityToken(token);
+
+    // Assert
+    expect(isAvailable).toBe(false);
+  });
+
   it('should check availability token correctly', async () => {
     // Arrange
     const authenticationRepository = new AuthenticationRepositoryPostgres(pool);

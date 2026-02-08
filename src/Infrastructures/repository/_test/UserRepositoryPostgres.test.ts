@@ -27,6 +27,19 @@ describe('UserRepositoryPostgres', () => {
     expect(isAvailable).toBe(true);
   });
 
+  it('should return false when username not available', async () => {
+    // Arrange
+    const idGenerator = (): string => '123';
+    const userRepository = new UserRepositoryPostgres(pool, idGenerator);
+
+    // Action
+    const isAvailable =
+      await userRepository.verifyAvailableUsername('dicoding');
+
+    // Assert
+    expect(isAvailable).toBe(false);
+  });
+
   it('should add user correctly', async () => {
     // Arrange
     const idGenerator = (): string => '123';

@@ -5,6 +5,7 @@ import ReplyDetail from '../../../Domains/replies/entities/ReplyDetail.js';
 import ReplyRepository from '../../../Domains/replies/ReplyRepository.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import GetThreadDetailUseCase from '../GetThreadDetailUseCase.js';
+import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
 
 describe('GetThreadDetailUseCase', () => {
   it('should throw error when thread not found', async () => {
@@ -89,6 +90,62 @@ describe('GetThreadDetailUseCase', () => {
       },
     ];
 
+    const expectedThreadDetail = new ThreadDetail({
+      id: 'thread-123',
+      username: 'ghazi',
+      title: 'Judul',
+      body: 'Body thread',
+      date: mockDate,
+      comments: [
+        new CommentDetail({
+          id: 'comment-1',
+          username: 'johndoe',
+          date: mockDate,
+          content: 'sebuah comment',
+          isDeleted: false,
+          replies: [
+            new ReplyDetail({
+              id: 'reply-1',
+              username: 'johndoe',
+              date: mockDate,
+              content: 'sebuah reply',
+              isDeleted: false,
+            }),
+            new ReplyDetail({
+              id: 'reply-2',
+              username: 'dicoding',
+              date: mockDate,
+              content: 'reply yang sudah dihapus',
+              isDeleted: true,
+            }),
+          ],
+        }),
+        new CommentDetail({
+          id: 'comment-2',
+          username: 'dicoding',
+          date: mockDate,
+          content: 'komentar yang dihapus',
+          isDeleted: true,
+          replies: [
+            new ReplyDetail({
+              id: 'reply-3',
+              username: 'johndoe',
+              date: mockDate,
+              content: 'sebuah reply',
+              isDeleted: false,
+            }),
+            new ReplyDetail({
+              id: 'reply-4',
+              username: 'dicoding',
+              date: mockDate,
+              content: 'reply yang sudah dihapus',
+              isDeleted: true,
+            }),
+          ],
+        }),
+      ],
+    });
+
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
@@ -111,20 +168,9 @@ describe('GetThreadDetailUseCase', () => {
 
     const threadDetail = await getThreadDetailUseCase.execute('thread-123');
 
-    expect(threadDetail.id).toBe('thread-123');
-    expect(threadDetail.title).toBe('Judul');
-    expect(threadDetail.body).toBe('Body thread');
-    expect(threadDetail.date).toBe(mockDate);
-    expect(threadDetail.username).toBe('ghazi');
-    expect(threadDetail.comments).toHaveLength(2);
-    expect(threadDetail.comments[0]).toBeInstanceOf(CommentDetail);
-    expect(threadDetail.comments[1]).toBeInstanceOf(CommentDetail);
-    expect(threadDetail.comments[0].replies).toHaveLength(2);
-    expect(threadDetail.comments[0].replies[0]).toBeInstanceOf(ReplyDetail);
-    expect(threadDetail.comments[0].replies[1]).toBeInstanceOf(ReplyDetail);
-    expect(threadDetail.comments[1].replies).toHaveLength(2);
-    expect(threadDetail.comments[1].replies[0]).toBeInstanceOf(ReplyDetail);
-    expect(threadDetail.comments[1].replies[1]).toBeInstanceOf(ReplyDetail);
+    // Assert
+    expect(threadDetail).toStrictEqual(expectedThreadDetail);
+    expect(threadDetail).toBeInstanceOf(ThreadDetail);
     expect(mockThreadRepository.getThreadById).toBeCalledWith('thread-123');
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
       'thread-123',

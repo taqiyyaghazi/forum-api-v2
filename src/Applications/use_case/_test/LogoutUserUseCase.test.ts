@@ -1,15 +1,18 @@
 import { describe, expect, it, vi } from 'vitest';
-import LogoutUserUseCase from '../LogoutUserUseCase.js';
+import LogoutUserUseCase, {
+  LogoutUserUseCasePayload,
+} from '../LogoutUserUseCase.js';
 import AuthenticationRepository from '../../../Domains/authentications/AuthenticationRepository.js';
 
 describe('LogoutUserUseCase', () => {
   it('should throw error when refresh token not found', async () => {
     // Arrange
-    const payload = {
+    const payload: LogoutUserUseCasePayload = {
       refreshToken: 'refresh_token',
     };
 
     const mockAuthenticationRepository = new AuthenticationRepository();
+
     mockAuthenticationRepository.checkAvailabilityToken = vi
       .fn()
       .mockResolvedValue(false);
@@ -28,11 +31,12 @@ describe('LogoutUserUseCase', () => {
 
   it('should orchestrate the logout user action correctly', async () => {
     // Arrange
-    const payload = {
+    const payload: LogoutUserUseCasePayload = {
       refreshToken: 'refresh_token',
     };
 
     const mockAuthenticationRepository = new AuthenticationRepository();
+
     mockAuthenticationRepository.checkAvailabilityToken = vi
       .fn()
       .mockResolvedValue(true);

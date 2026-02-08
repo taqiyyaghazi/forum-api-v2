@@ -1,26 +1,26 @@
 import { describe, expect, it, vi } from 'vitest';
-import AddReplyUseCase from '../AddReplyUseCase.js';
-import ReplyRepository from '../../../Domains/replies/ReplyRepository.js';
 import CommentRepository from '../../../Domains/comments/CommentRepository.js';
-import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
-import NewReply from '../../../Domains/replies/entities/NewReply.js';
 import AddedReply from '../../../Domains/replies/entities/AddedReply.js';
+import NewReply from '../../../Domains/replies/entities/NewReply.js';
+import ReplyRepository from '../../../Domains/replies/ReplyRepository.js';
+import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
+import AddReplyUseCase, { AddReplyUseCasePayload } from '../AddReplyUseCase.js';
 
 describe('AddReplyUseCase', () => {
   it('should create added reply correctly', async () => {
     // Arrange
-    const useCasePayload = {
+    const payload: AddReplyUseCasePayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       content: 'new reply',
       owner: 'user-123',
     };
 
-    const mockReplyRepository = new ReplyRepository();
-
-    const mockCommentRepository = new CommentRepository();
-
-    const mockThreadRepository = new ThreadRepository();
+    const mockAddedReply = new AddedReply({
+      id: 'reply-123',
+      content: 'new reply',
+      owner: 'user-123',
+    });
 
     const expectedAddedReply = new AddedReply({
       id: 'reply-123',
@@ -28,13 +28,13 @@ describe('AddReplyUseCase', () => {
       owner: 'user-123',
     });
 
-    mockReplyRepository.addReply = vi.fn().mockResolvedValue(
-      new AddedReply({
-        id: 'reply-123',
-        content: 'new reply',
-        owner: 'user-123',
-      }),
-    );
+    const mockReplyRepository = new ReplyRepository();
+
+    const mockCommentRepository = new CommentRepository();
+
+    const mockThreadRepository = new ThreadRepository();
+
+    mockReplyRepository.addReply = vi.fn().mockResolvedValue(mockAddedReply);
     mockCommentRepository.isCommentExist = vi.fn().mockResolvedValue(true);
     mockThreadRepository.verifyThreadExists = vi.fn().mockResolvedValue(true);
 
@@ -45,11 +45,11 @@ describe('AddReplyUseCase', () => {
     );
 
     // Action
-    const addedReply = await addReplyUseCase.execute(useCasePayload);
+    const addedReply = await addReplyUseCase.execute(payload);
 
     // Assert
     expect(addedReply).toBeInstanceOf(AddedReply);
-    expect(addedReply).toEqual(expectedAddedReply);
+    expect(addedReply).toStrictEqual(expectedAddedReply);
     expect(mockThreadRepository.verifyThreadExists).toHaveBeenCalledWith(
       'thread-123',
     );
@@ -65,7 +65,7 @@ describe('AddReplyUseCase', () => {
 
   it('should throw error when thread not found', async () => {
     // Arrange
-    const useCasePayload = {
+    const payload: AddReplyUseCasePayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       content: 'new reply',
@@ -87,14 +87,14 @@ describe('AddReplyUseCase', () => {
     );
 
     // Action and Assert
-    await expect(addReplyUseCase.execute(useCasePayload)).rejects.toThrowError(
+    await expect(addReplyUseCase.execute(payload)).rejects.toThrowError(
       'ADD_REPLY_USE_CASE.THREAD_NOT_FOUND',
     );
   });
 
   it('should throw error when comment not found', async () => {
     // Arrange
-    const useCasePayload = {
+    const payload: AddReplyUseCasePayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       content: 'new reply',
@@ -117,7 +117,7 @@ describe('AddReplyUseCase', () => {
     );
 
     // Action and Assert
-    await expect(addReplyUseCase.execute(useCasePayload)).rejects.toThrowError(
+    await expect(addReplyUseCase.execute(payload)).rejects.toThrowError(
       'ADD_REPLY_USE_CASE.COMMENT_NOT_FOUND',
     );
   });

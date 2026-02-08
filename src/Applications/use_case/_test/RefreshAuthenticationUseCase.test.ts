@@ -1,19 +1,21 @@
 import { describe, expect, it, vi } from 'vitest';
-import RefreshAuthenticationUseCase from '../RefreshAuthenticationUseCase.js';
+import RefreshAuthenticationUseCase, {
+  RefreshAuthenticationUseCasePayload,
+} from '../RefreshAuthenticationUseCase.js';
 import AuthenticationRepository from '../../../Domains/authentications/AuthenticationRepository.js';
 import TokenManager from '../../security/TokenManager.js';
 
 describe('RefreshAuthenticationUseCase', () => {
   it('should throw error when refresh token is invalid', async () => {
     // Arrange
-    const payload = {
+    const payload: RefreshAuthenticationUseCasePayload = {
       refreshToken: 'refresh_token',
     };
 
     const mockTokenManager = new TokenManager();
-    mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(false);
-
     const mockAuthenticationRepository = new AuthenticationRepository();
+
+    mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(false);
 
     const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase(
       mockAuthenticationRepository,
@@ -28,14 +30,14 @@ describe('RefreshAuthenticationUseCase', () => {
 
   it('should throw error when refresh token not found in database', async () => {
     // Arrange
-    const payload = {
+    const payload: RefreshAuthenticationUseCasePayload = {
       refreshToken: 'refresh_token',
     };
 
     const mockTokenManager = new TokenManager();
-    mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(true);
-
     const mockAuthenticationRepository = new AuthenticationRepository();
+
+    mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(true);
     mockAuthenticationRepository.checkAvailabilityToken = vi
       .fn()
       .mockResolvedValue(false);
@@ -53,11 +55,13 @@ describe('RefreshAuthenticationUseCase', () => {
 
   it('should orchestrate the refresh authentication action correctly', async () => {
     // Arrange
-    const payload = {
+    const payload: RefreshAuthenticationUseCasePayload = {
       refreshToken: 'refresh_token',
     };
 
     const mockTokenManager = new TokenManager();
+    const mockAuthenticationRepository = new AuthenticationRepository();
+
     mockTokenManager.verifyRefreshToken = vi.fn().mockResolvedValue(true);
     mockTokenManager.decodePayload = vi
       .fn()
@@ -65,8 +69,6 @@ describe('RefreshAuthenticationUseCase', () => {
     mockTokenManager.createAccessToken = vi
       .fn()
       .mockResolvedValue('new_access_token');
-
-    const mockAuthenticationRepository = new AuthenticationRepository();
     mockAuthenticationRepository.checkAvailabilityToken = vi
       .fn()
       .mockResolvedValue(true);

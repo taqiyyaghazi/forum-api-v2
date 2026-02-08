@@ -1,7 +1,7 @@
 import NewThread from '../../Domains/threads/entities/NewThread.js';
 import ThreadRepository from '../../Domains/threads/ThreadRepository.js';
 
-interface AddThreadUseCasePayload {
+export interface AddThreadUseCasePayload {
   title: string;
   body: string;
   owner: string;

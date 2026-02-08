@@ -1,7 +1,7 @@
 import AuthenticationRepository from '../../Domains/authentications/AuthenticationRepository.js';
 import RefreshToken from '../../Domains/authentications/entities/RefreshToken.js';
 
-interface LogoutUserUseCasePayload {
+export interface LogoutUserUseCasePayload {
   refreshToken: string;
 }
 

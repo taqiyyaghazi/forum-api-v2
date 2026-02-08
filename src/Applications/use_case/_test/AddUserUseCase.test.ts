@@ -1,12 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
-import AddUserUseCase from '../AddUserUseCase.js';
+import RegisterUser from '../../../Domains/users/entities/RegisterUser.js';
 import UserRepository from '../../../Domains/users/UserRepository.js';
 import PasswordHash from '../../security/PasswordHash.js';
+import AddUserUseCase, { AddUserUseCasePayload } from '../AddUserUseCase.js';
 
 describe('AddUserUseCase', () => {
   it('should throw error when username is already taken', async () => {
     // Arrange
-    const payload = {
+    const payload: AddUserUseCasePayload = {
       username: 'dicoding',
       password: 'secret',
       fullname: 'Dicoding Indonesia',
@@ -33,9 +34,15 @@ describe('AddUserUseCase', () => {
 
   it('should orchestrate the add user action correctly', async () => {
     // Arrange
-    const payload = {
+    const payload: AddUserUseCasePayload = {
       username: 'dicoding',
       password: 'secret',
+      fullname: 'Dicoding Indonesia',
+    };
+
+    const mockRegisteredUser = {
+      id: 'user-123',
+      username: 'dicoding',
       fullname: 'Dicoding Indonesia',
     };
 
@@ -45,11 +52,7 @@ describe('AddUserUseCase', () => {
     mockUserRepository.verifyAvailableUsername = vi
       .fn()
       .mockResolvedValue(false);
-    mockUserRepository.addUser = vi.fn().mockResolvedValue({
-      id: 'user-123',
-      username: 'dicoding',
-      fullname: 'Dicoding Indonesia',
-    });
+    mockUserRepository.addUser = vi.fn().mockResolvedValue(mockRegisteredUser);
     mockPasswordHash.hash = vi.fn().mockResolvedValue('hashed_password');
 
     const addUserUseCase = new AddUserUseCase(
@@ -61,20 +64,17 @@ describe('AddUserUseCase', () => {
     const result = await addUserUseCase.execute(payload);
 
     // Assert
-    expect(result).toEqual({
-      id: 'user-123',
-      username: 'dicoding',
-      fullname: 'Dicoding Indonesia',
-    });
-
+    expect(result).toStrictEqual(mockRegisteredUser);
     expect(mockUserRepository.verifyAvailableUsername).toBeCalledWith(
       'dicoding',
     );
     expect(mockPasswordHash.hash).toBeCalledWith('secret');
-    expect(mockUserRepository.addUser).toBeCalledWith({
-      username: 'dicoding',
-      password: 'hashed_password',
-      fullname: 'Dicoding Indonesia',
-    });
+    expect(mockUserRepository.addUser).toBeCalledWith(
+      new RegisterUser({
+        username: 'dicoding',
+        password: 'hashed_password',
+        fullname: 'Dicoding Indonesia',
+      }),
+    );
   });
 });

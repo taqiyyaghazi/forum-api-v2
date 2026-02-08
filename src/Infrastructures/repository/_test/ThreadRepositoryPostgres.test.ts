@@ -59,6 +59,27 @@ describe('ThreadRepositoryPostgres', () => {
     ).resolves.toBe(true);
   });
 
+  it('should return false when thread not exists', async () => {
+    // Arrange
+    const idGenerator = (): string => '123';
+    const repository = new ThreadRepositoryPostgres(pool, idGenerator);
+
+    // Action & Assert
+    await expect(
+      repository.verifyThreadExists('thread-thread-123'),
+    ).resolves.toBe(false);
+  });
+
+  it('should return null if thread not exists', async () => {
+    // Arrange
+    const idGenerator = (): string => '123';
+    const repository = new ThreadRepositoryPostgres(pool, idGenerator);
+
+    // Action & Assert
+    const thread = await repository.getThreadById('thread-456');
+    expect(thread).toBeNull();
+  });
+
   it('should return null if thread not exists', async () => {
     // Arrange
     const idGenerator = (): string => '123';
@@ -97,5 +118,15 @@ describe('ThreadRepositoryPostgres', () => {
       date: date,
       username: 'dicoding-thread-4',
     });
+  });
+
+  it('should return null when thread not exists', async () => {
+    // Arrange
+    const idGenerator = (): string => '123';
+    const repository = new ThreadRepositoryPostgres(pool, idGenerator);
+
+    // Action & Assert
+    const thread = await repository.getThreadById('thread-456');
+    expect(thread).toBeNull();
   });
 });

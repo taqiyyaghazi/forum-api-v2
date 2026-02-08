@@ -1,13 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 import CommentRepository from '../../../Domains/comments/CommentRepository.js';
-import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
-import AddCommentUseCase from '../AddCommentUseCase.js';
+import AddedComment from '../../../Domains/comments/entities/AddedComment.js';
 import NewComment from '../../../Domains/comments/entities/NewComment.js';
+import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
+import AddCommentUseCase, { AddCommentUseCasePayload } from '../AddCommentUseCase.js';
 
 describe('AddCommentUseCase', () => {
   it('should throw error when thread is not found', async () => {
     // Arrange
-    const payload = {
+    const payload: AddCommentUseCasePayload = {
       content: 'sebuah comment',
       threadId: 'thread-123',
       owner: 'user-123',
@@ -42,17 +43,23 @@ describe('AddCommentUseCase', () => {
 
   it('should orchestrate the add comment action correctly', async () => {
     // Arrange
-    const payload = {
+    const payload: AddCommentUseCasePayload = {
       content: 'sebuah comment',
       threadId: 'thread-123',
       owner: 'user-123',
     };
 
-    const mockAddedComment = {
+    const mockAddedComment = new AddedComment({
       id: 'comment-123',
       content: 'thread-123',
       owner: 'user-123',
-    };
+    });
+
+    const expectedAddedComment = new AddedComment({
+      id: 'comment-123',
+      content: 'thread-123',
+      owner: 'user-123',
+    });
 
     const mockCommentRepository = new CommentRepository();
     const mockThreadRepository = new ThreadRepository();
@@ -71,11 +78,8 @@ describe('AddCommentUseCase', () => {
     const result = await addCommentUseCase.execute(payload);
 
     // Assert
-    expect(result).toEqual({
-      id: 'comment-123',
-      content: 'thread-123',
-      owner: 'user-123',
-    });
+    expect(result).toBeInstanceOf(AddedComment);
+    expect(result).toStrictEqual(expectedAddedComment);
     expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(
       payload.threadId,
     );

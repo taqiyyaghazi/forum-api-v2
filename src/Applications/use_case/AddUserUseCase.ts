@@ -2,7 +2,7 @@ import RegisterUser from '../../Domains/users/entities/RegisterUser.js';
 import UserRepository from '../../Domains/users/UserRepository.js';
 import PasswordHash from '../security/PasswordHash.js';
 
-interface AddUserUseCasePayload {
+export interface AddUserUseCasePayload {
   username: string;
   password: string;
   fullname: string;

@@ -5,7 +5,7 @@ import UserRepository from '../../Domains/users/UserRepository.js';
 import TokenManager from '../security/TokenManager.js';
 import PasswordHash from '../security/PasswordHash.js';
 
-interface LoginUserUseCasePayload {
+export interface LoginUserUseCasePayload {
   username: string;
   password: string;
 }

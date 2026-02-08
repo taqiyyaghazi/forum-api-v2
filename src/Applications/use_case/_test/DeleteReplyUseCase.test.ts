@@ -6,7 +6,7 @@ import DeleteReplyUseCase from '../DeleteReplyUseCase.js';
 describe('DeleteReplyUseCase', () => {
   it('should throw error when reply not found', async () => {
     // Arrange
-    const useCasePayload: DeleteReplyPayload = {
+    const payload: DeleteReplyPayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       replyId: 'reply-123',
@@ -25,13 +25,13 @@ describe('DeleteReplyUseCase', () => {
 
     // Action and Assert
     await expect(
-      deleteReplyUseCase.execute(useCasePayload),
+      deleteReplyUseCase.execute(payload),
     ).rejects.toThrowError('DELETE_REPLY_USE_CASE.REPLY_NOT_FOUND');
   });
 
   it('should throw error when reply not owner', async () => {
     // Arrange
-    const useCasePayload: DeleteReplyPayload = {
+    const payload: DeleteReplyPayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       replyId: 'reply-123',
@@ -49,13 +49,13 @@ describe('DeleteReplyUseCase', () => {
 
     // Action and Assert
     await expect(
-      deleteReplyUseCase.execute(useCasePayload),
+      deleteReplyUseCase.execute(payload),
     ).rejects.toThrowError('DELETE_REPLY_USE_CASE.REPLY_NOT_OWNER');
   });
 
   it('should delete reply correctly', async () => {
     // Arrange
-    const useCasePayload: DeleteReplyPayload = {
+    const payload: DeleteReplyPayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       replyId: 'reply-123',
@@ -73,7 +73,7 @@ describe('DeleteReplyUseCase', () => {
     const deleteReplyUseCase = new DeleteReplyUseCase(mockReplyRepository);
 
     // Action and Assert
-    await deleteReplyUseCase.execute(useCasePayload);
+    await deleteReplyUseCase.execute(payload);
 
     expect(mockReplyRepository.checkReplyAvailability).toHaveBeenCalledWith(
       'reply-123',

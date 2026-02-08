@@ -2,7 +2,7 @@ import AuthenticationRepository from '../../Domains/authentications/Authenticati
 import RefreshToken from '../../Domains/authentications/entities/RefreshToken.js';
 import TokenManager from '../security/TokenManager.js';
 
-interface RefreshAuthenticationUseCasePayload {
+export interface RefreshAuthenticationUseCasePayload {
   refreshToken: string;
 }
 

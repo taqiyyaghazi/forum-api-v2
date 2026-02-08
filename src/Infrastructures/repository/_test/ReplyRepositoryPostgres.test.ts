@@ -121,6 +121,19 @@ describe('ReplyRepositoryPostgres', () => {
     expect(replies[0].commentId).toBe('comment-123');
   });
 
+  it('should return empty array when no replies found', async () => {
+    // Arrange
+    const threadId = 'thread-123';
+    const fakeIdGenerator = (): string => '123';
+    const replyRepository = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
+
+    // Action
+    const replies = await replyRepository.getRepliesByThreadId(threadId);
+
+    // Assert
+    expect(replies).toHaveLength(0);
+  });
+
   it('should check reply availability correctly', async () => {
     // Arrange
     const threadId = 'thread-123';
@@ -165,6 +178,50 @@ describe('ReplyRepositoryPostgres', () => {
     expect(isAvailable).toBe(true);
   });
 
+  it('should return false when reply availability is not verified', async () => {
+    // Arrange
+    const threadId = 'thread-123';
+    const commentId = 'comment-123';
+    const replyId = 'reply-123';
+    await UsersTableTestHelper.addUser({
+      id: 'user-123',
+      username: 'dicoding',
+      password: 'password',
+      fullname: 'Dicoding',
+    });
+    await ThreadsTableTestHelper.addThread({
+      id: threadId,
+      title: 'thread',
+      owner: 'user-123',
+    });
+    await CommentsTableTestHelper.addComment({
+      id: commentId,
+      content: 'comment',
+      owner: 'user-123',
+      threadId: threadId,
+    });
+    await RepliesTableTestHelper.addReply({
+      id: replyId,
+      content: 'reply',
+      owner: 'user-123',
+      commentId: commentId,
+      date: new Date(),
+      isDeleted: false,
+    });
+    const fakeIdGenerator = (): string => '123';
+    const replyRepository = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
+
+    // Action
+    const isAvailable = await replyRepository.checkReplyAvailability(
+      replyId,
+      'comment-456',
+      threadId,
+    );
+
+    // Assert
+    expect(isAvailable).toBe(false);
+  });
+
   it('should verify reply owner correctly', async () => {
     // Arrange
     const threadId = 'thread-123';
@@ -204,6 +261,47 @@ describe('ReplyRepositoryPostgres', () => {
 
     // Assert
     expect(isOwner).toBe(true);
+  });
+
+  it('should return false when reply owner is not verified', async () => {
+    // Arrange
+    const threadId = 'thread-123';
+    const commentId = 'comment-123';
+    const replyId = 'reply-123';
+    const owner = 'user-123';
+    await UsersTableTestHelper.addUser({
+      id: 'user-123',
+      username: 'dicoding',
+      password: 'password',
+      fullname: 'Dicoding',
+    });
+    await ThreadsTableTestHelper.addThread({
+      id: threadId,
+      title: 'thread',
+      owner: owner,
+    });
+    await CommentsTableTestHelper.addComment({
+      id: commentId,
+      content: 'comment',
+      owner: owner,
+      threadId: threadId,
+    });
+    await RepliesTableTestHelper.addReply({
+      id: replyId,
+      content: 'reply',
+      owner: owner,
+      commentId: commentId,
+      date: new Date(),
+      isDeleted: false,
+    });
+    const fakeIdGenerator = (): string => '123';
+    const replyRepository = new ReplyRepositoryPostgres(pool, fakeIdGenerator);
+
+    // Action
+    const isOwner = await replyRepository.verifyReplyOwner(replyId, 'user-456');
+
+    // Assert
+    expect(isOwner).toBe(false);
   });
 
   it('should delete reply correctly', async () => {

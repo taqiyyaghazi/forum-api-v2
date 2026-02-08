@@ -7,7 +7,7 @@ import { DeleteCommentPayload } from '../../../Domains/comments/entities/DeleteC
 describe('DeleteCommentUseCase', () => {
   it('should throw error when thread not found', async () => {
     // Arrange
-    const useCasePayload: DeleteCommentPayload = {
+    const payload: DeleteCommentPayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       owner: 'user-123',
@@ -26,13 +26,13 @@ describe('DeleteCommentUseCase', () => {
 
     // Action and Assert
     await expect(
-      deleteCommentUseCase.execute(useCasePayload),
+      deleteCommentUseCase.execute(payload),
     ).rejects.toThrowError('DELETE_COMMENT_USE_CASE.THREAD_NOT_FOUND');
   });
 
   it('should throw error when comment not found', async () => {
     // Arrange
-    const useCasePayload: DeleteCommentPayload = {
+    const payload: DeleteCommentPayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       owner: 'user-123',
@@ -52,13 +52,13 @@ describe('DeleteCommentUseCase', () => {
 
     // Action and Assert
     await expect(
-      deleteCommentUseCase.execute(useCasePayload),
+      deleteCommentUseCase.execute(payload),
     ).rejects.toThrowError('DELETE_COMMENT_USE_CASE.COMMENT_NOT_FOUND');
   });
 
   it('should throw error when comment not owner', async () => {
     // Arrange
-    const useCasePayload: DeleteCommentPayload = {
+    const payload: DeleteCommentPayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       owner: 'user-123',
@@ -79,13 +79,13 @@ describe('DeleteCommentUseCase', () => {
 
     // Action and Assert
     await expect(
-      deleteCommentUseCase.execute(useCasePayload),
+      deleteCommentUseCase.execute(payload),
     ).rejects.toThrowError('DELETE_COMMENT_USE_CASE.COMMENT_NOT_OWNER');
   });
 
   it('should delete comment correctly', async () => {
     // Arrange
-    const useCasePayload: DeleteCommentPayload = {
+    const payload: DeleteCommentPayload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
       owner: 'user-123',
@@ -106,7 +106,7 @@ describe('DeleteCommentUseCase', () => {
     );
 
     // Action and Assert
-    await deleteCommentUseCase.execute(useCasePayload);
+    await deleteCommentUseCase.execute(payload);
 
     expect(mockThreadRepository.verifyThreadExists).toHaveBeenCalledWith(
       'thread-123',

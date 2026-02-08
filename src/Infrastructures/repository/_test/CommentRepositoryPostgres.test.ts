@@ -124,6 +124,24 @@ describe('CommentRepositoryPostgres', () => {
     });
   });
 
+  it('should return empty array when comments are not exist', async () => {
+    // Arrange
+    const fakeIdGenerator = (): string => '123';
+    const commentRepositoryPostgres = new CommentRepositoryPostgres(
+      pool,
+      fakeIdGenerator,
+    );
+
+    // Action
+    const comments =
+      await commentRepositoryPostgres.getCommentsByThreadId(
+        'thread-comment-123',
+      );
+
+    // Assert
+    expect(comments).toHaveLength(0);
+  });
+
   it('should get is comment exist correctly', async () => {
     // Arrange
     await UsersTableTestHelper.addUser({
@@ -153,6 +171,23 @@ describe('CommentRepositoryPostgres', () => {
 
     // Assert
     expect(isExist).toBe(true);
+  });
+
+  it('should return false when comment is not exist', async () => {
+    // Arrange
+    const fakeIdGenerator = (): string => '123';
+    const commentRepositoryPostgres = new CommentRepositoryPostgres(
+      pool,
+      fakeIdGenerator,
+    );
+
+    // Action
+    const isExist = await commentRepositoryPostgres.isCommentExist(
+      'comment-123',
+    );
+
+    // Assert
+    expect(isExist).toBe(false);
   });
 
   it('should verify comment owner correctly', async () => {
@@ -185,6 +220,38 @@ describe('CommentRepositoryPostgres', () => {
 
     // Assert
     expect(isOwner).toBe(true);
+  });
+
+  it('should return false when comment owner is not verified', async () => {
+    // Arrange
+    await UsersTableTestHelper.addUser({
+      id: 'user-comment-123',
+      username: 'dicoding-comment',
+    });
+    await ThreadsTableTestHelper.addThread({
+      id: 'thread-comment-123',
+      owner: 'user-comment-123',
+    });
+    await CommentsTableTestHelper.addComment({
+      id: 'comment-123',
+      content: 'sebuah comment',
+      owner: 'user-comment-123',
+      threadId: 'thread-comment-123',
+    });
+    const fakeIdGenerator = (): string => '123';
+    const commentRepositoryPostgres = new CommentRepositoryPostgres(
+      pool,
+      fakeIdGenerator,
+    );
+
+    // Action
+    const isOwner = await commentRepositoryPostgres.verifyCommentOwner(
+      'comment-123',
+      'user-comment-456',
+    );
+
+    // Assert
+    expect(isOwner).toBe(false);
   });
 
   it('should delete comment correctly', async () => {

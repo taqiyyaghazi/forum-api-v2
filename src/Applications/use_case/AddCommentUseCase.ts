@@ -2,7 +2,7 @@ import CommentRepository from '../../Domains/comments/CommentRepository.js';
 import NewComment from '../../Domains/comments/entities/NewComment.js';
 import ThreadRepository from '../../Domains/threads/ThreadRepository.js';
 
-interface AddCommentUseCasePayload {
+export interface AddCommentUseCasePayload {
   content: string;
   threadId: string;
   owner: string;

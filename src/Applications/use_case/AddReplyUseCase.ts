@@ -4,7 +4,7 @@ import ReplyRepository from '../../Domains/replies/ReplyRepository.js';
 import ThreadRepository from '../../Domains/threads/ThreadRepository.js';
 import AddedReply from '../../Domains/replies/entities/AddedReply.js';
 
-interface UseCasePayload {
+export interface AddReplyUseCasePayload {
   threadId: string;
   commentId: string;
   content: string;
@@ -18,7 +18,7 @@ class AddReplyUseCase {
     private readonly threadRepository: ThreadRepository,
   ) {}
 
-  async execute(useCasePayload: UseCasePayload): Promise<AddedReply> {
+  async execute(useCasePayload: AddReplyUseCasePayload): Promise<AddedReply> {
     const { threadId, commentId, content, owner } = useCasePayload;
     const newReply = new NewReply({ content });
 
