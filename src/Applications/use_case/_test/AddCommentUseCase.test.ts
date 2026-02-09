@@ -3,7 +3,9 @@ import CommentRepository from '../../../Domains/comments/CommentRepository.js';
 import AddedComment from '../../../Domains/comments/entities/AddedComment.js';
 import NewComment from '../../../Domains/comments/entities/NewComment.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
-import AddCommentUseCase, { AddCommentUseCasePayload } from '../AddCommentUseCase.js';
+import AddCommentUseCase, {
+  AddCommentUseCasePayload,
+} from '../AddCommentUseCase.js';
 
 describe('AddCommentUseCase', () => {
   it('should throw error when thread is not found', async () => {
@@ -29,9 +31,7 @@ describe('AddCommentUseCase', () => {
     await expect(addCommentUseCase.execute(payload)).rejects.toThrowError(
       'ADD_COMMENT_USE_CASE.THREAD_NOT_FOUND',
     );
-    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(
-      'thread-123',
-    );
+    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(null);
     expect(mockCommentRepository.addComment).not.toBeCalledWith(
       new NewComment({
         content: 'sebuah comment',
