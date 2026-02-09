@@ -31,7 +31,9 @@ describe('AddCommentUseCase', () => {
     await expect(addCommentUseCase.execute(payload)).rejects.toThrowError(
       'ADD_COMMENT_USE_CASE.THREAD_NOT_FOUND',
     );
-    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(null);
+    expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(
+      'thread-123',
+    );
     expect(mockCommentRepository.addComment).not.toBeCalledWith(
       new NewComment({
         content: 'sebuah comment',
