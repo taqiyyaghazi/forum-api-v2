@@ -6,6 +6,7 @@ export interface CommentDetailPayload {
   date: Date;
   content: string;
   isDeleted: boolean;
+  likeCount: number;
   replies: ReplyDetail[];
 }
 
@@ -14,15 +15,18 @@ class CommentDetail {
   readonly username: string;
   readonly date: Date;
   readonly content: string;
+  readonly likeCount: number;
   readonly replies: ReplyDetail[];
 
   constructor(payload: CommentDetailPayload) {
     this._verifyPayload(payload);
-    const { id, username, date, content, isDeleted, replies } = payload;
+    const { id, username, date, content, isDeleted, likeCount, replies } =
+      payload;
     this.id = id;
     this.username = username;
     this.date = date;
     this.content = isDeleted ? '**komentar telah dihapus**' : content;
+    this.likeCount = likeCount;
     this.replies = replies;
   }
 
@@ -31,9 +35,17 @@ class CommentDetail {
       throw new Error('COMMENT_DETAIL.NOT_CONTAIN_PAYLOAD');
     }
 
-    const { id, username, date, content, replies } = payload;
+    const { id, username, date, content, likeCount, replies } = payload;
 
-    if (!id || !username || !date || !content || !replies) {
+    if (
+      !id ||
+      !username ||
+      !date ||
+      !content ||
+      typeof likeCount === 'undefined' ||
+      likeCount === null ||
+      !replies
+    ) {
       throw new Error('COMMENT_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
@@ -42,6 +54,7 @@ class CommentDetail {
       typeof username !== 'string' ||
       !(date instanceof Date) ||
       typeof content !== 'string' ||
+      typeof likeCount !== 'number' ||
       !Array.isArray(replies)
     ) {
       throw new Error('COMMENT_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');

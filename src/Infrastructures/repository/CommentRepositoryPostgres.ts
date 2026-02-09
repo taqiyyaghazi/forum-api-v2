@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import CommentRepository from '../../Domains/comments/CommentRepository.js';
-import NewComment from '../../Domains/comments/entities/NewComment.js';
 import AddedComment from '../../Domains/comments/entities/AddedComment.js';
+import NewComment from '../../Domains/comments/entities/NewComment.js';
 
 class CommentRepositoryPostgres extends CommentRepository {
   constructor(
@@ -32,14 +32,17 @@ class CommentRepositoryPostgres extends CommentRepository {
       date: Date;
       content: string;
       isDeleted: boolean;
+      likeCount: number;
     }[]
   > {
     const query = {
       text: `
-        SELECT comments.id, users.username, comments.date, comments.content, comments.is_deleted as "isDeleted"
+        SELECT comments.id, users.username, comments.date, comments.content, comments.is_deleted as "isDeleted", COUNT(likes.id)::int AS "likeCount"
         FROM comments
         INNER JOIN users ON comments.owner = users.id
+        LEFT JOIN likes ON comments.id = likes.comment_id
         WHERE comments.thread_id = $1
+        GROUP BY comments.id, users.username
         ORDER BY comments.date ASC
       `,
       values: [threadId],
@@ -50,10 +53,13 @@ class CommentRepositoryPostgres extends CommentRepository {
     return result.rows;
   }
 
-  async isCommentExist(commentId: string): Promise<boolean> {
+  async verifyCommentAvailability(
+    commentId: string,
+    threadId: string,
+  ): Promise<boolean> {
     const query = {
-      text: 'SELECT id FROM comments WHERE id = $1',
-      values: [commentId],
+      text: 'SELECT id FROM comments WHERE id = $1 AND thread_id = $2',
+      values: [commentId, threadId],
     };
 
     const result = await this.pool.query(query);

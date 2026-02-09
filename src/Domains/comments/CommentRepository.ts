@@ -15,12 +15,16 @@ class CommentRepository {
       date: Date;
       content: string;
       isDeleted: boolean;
+      likeCount: number;
     }[]
   > {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async isCommentExist(_commentId: string): Promise<boolean> {
+  async verifyCommentAvailability(
+    _commentId: string,
+    _threadId: string,
+  ): Promise<boolean> {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 

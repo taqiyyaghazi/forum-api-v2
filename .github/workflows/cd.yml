@@ -1,0 +1,65 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ['Continuous Integration']
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          source: 'docker-compose.yml,nginx,init-letsencrypt.sh'
+          target: '~/forum-api'
+
+      - name: Deploy to VPS using Docker Compose
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE_TAG: latest
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
+          REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
+          ACCESS_TOKEN_AGE: ${{ secrets.ACCESS_TOKEN_AGE }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          envs: GITHUB_USERNAME,GITHUB_TOKEN,IMAGE_TAG,PGUSER,PGPASSWORD,PGDATABASE,ACCESS_TOKEN_KEY,REFRESH_TOKEN_KEY,ACCESS_TOKEN_AGE
+          script: |
+            # Navigate to project directory
+            cd ~/forum-api
+
+            # Login to GitHub Container Registry
+            echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_USERNAME --password-stdin
+
+            # Set Image Name (Lowercase)
+            export IMAGE_NAME=$(echo "ghcr.io/${{ github.repository }}:$IMAGE_TAG" | tr '[:upper:]' '[:lower:]')
+
+            # Pull latest images
+            docker compose pull
+
+            # Start services
+            docker compose up -d
+
+            # Clean up
+            docker system prune -f

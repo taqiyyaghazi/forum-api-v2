@@ -32,6 +32,7 @@ describe('CommentDetail entity', () => {
       date: '2021-08-08T07:22:33.555Z',
       content: 'sebuah comment',
       isDeleted: false,
+      likeCount: 0,
       replies: [],
     } as unknown as CommentDetailPayload;
 
@@ -50,6 +51,7 @@ describe('CommentDetail entity', () => {
       date: mockDate,
       content: 'sebuah comment',
       isDeleted: false,
+      likeCount: 0,
       replies: [],
     };
 
@@ -62,6 +64,7 @@ describe('CommentDetail entity', () => {
     expect(commentDetail.username).toEqual('dicoding');
     expect(commentDetail.date).toEqual(mockDate);
     expect(commentDetail.content).toEqual('sebuah comment');
+    expect(commentDetail.likeCount).toEqual(0);
     expect(commentDetail.replies).toEqual([]);
   });
 
@@ -74,6 +77,7 @@ describe('CommentDetail entity', () => {
       date: mockDate,
       content: 'sebuah comment',
       isDeleted: true,
+      likeCount: 0,
       replies: [],
     };
 

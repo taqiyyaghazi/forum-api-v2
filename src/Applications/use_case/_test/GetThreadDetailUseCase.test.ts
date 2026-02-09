@@ -46,6 +46,7 @@ describe('GetThreadDetailUseCase', () => {
         date: mockDate,
         content: 'sebuah comment',
         isDeleted: false,
+        likeCount: 0,
       },
       {
         id: 'comment-2',
@@ -53,6 +54,7 @@ describe('GetThreadDetailUseCase', () => {
         date: mockDate,
         content: 'komentar yang dihapus',
         isDeleted: true,
+        likeCount: 0,
       },
     ];
     const mockReplies = [
@@ -103,6 +105,7 @@ describe('GetThreadDetailUseCase', () => {
           date: mockDate,
           content: 'sebuah comment',
           isDeleted: false,
+          likeCount: 0,
           replies: [
             new ReplyDetail({
               id: 'reply-1',
@@ -126,6 +129,7 @@ describe('GetThreadDetailUseCase', () => {
           date: mockDate,
           content: 'komentar yang dihapus',
           isDeleted: true,
+          likeCount: 0,
           replies: [
             new ReplyDetail({
               id: 'reply-3',

@@ -104,6 +104,9 @@ const directories: ErrorDirectory = {
   'DELETE_REPLY_USE_CASE.REPLY_NOT_OWNER': new AuthorizationError(
     'anda tidak berhak menghapus reply ini',
   ),
+  'TOGGLE_LIKE_COMMENT_USE_CASE.COMMENT_NOT_FOUND': new NotFoundError(
+    'comment tidak ditemukan',
+  ),
 };
 
 const DomainErrorTranslator = {

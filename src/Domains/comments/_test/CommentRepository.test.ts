@@ -26,7 +26,7 @@ describe('CommentRepository interface', () => {
       commentRepository.verifyCommentOwner('comment-123', 'user-123'),
     ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
     await expect(
-      commentRepository.isCommentExist('comment-123'),
+      commentRepository.verifyCommentAvailability('comment-123', 'thread-123'),
     ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   });
 });

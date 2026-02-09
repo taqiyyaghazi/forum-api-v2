@@ -9,6 +9,11 @@ const createCommentsRouter = (
 
   router.post('/', authMiddleware, handler.postCommentHandler);
   router.delete('/:commentId', authMiddleware, handler.deleteCommentHandler);
+  router.put(
+    '/:commentId/likes',
+    authMiddleware,
+    handler.putLikeCommentHandler,
+  );
 
   return router;
 };

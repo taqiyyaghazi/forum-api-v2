@@ -2,6 +2,7 @@ import { afterAll, afterEach, describe, expect, it } from 'vitest';
 import CommentsTableTestHelper from '../../../../tests/CommentsTableTestHelper.js';
 import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js';
 import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
+import LikesTableTestHelper from '../../../../tests/LikesTableTestHelper.js';
 import NewComment from '../../../Domains/comments/entities/NewComment.js';
 import AddedComment from '../../../Domains/comments/entities/AddedComment.js';
 import pool from '../../database/postgres/pool.js';
@@ -9,6 +10,9 @@ import CommentRepositoryPostgres from '../CommentRepositoryPostgres.js';
 
 describe('CommentRepositoryPostgres', () => {
   afterEach(async () => {
+    await LikesTableTestHelper.cleanTable();
+    await CommentsTableTestHelper.cleanTable();
+    await ThreadsTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanTable();
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
@@ -94,6 +98,12 @@ describe('CommentRepositoryPostgres', () => {
       isDeleted: true,
     });
 
+    await LikesTableTestHelper.addLike({
+      id: 'like-123',
+      owner: 'user-comment-123',
+      commentId: 'comment-123',
+    });
+
     const fakeIdGenerator = (): string => '123';
     const commentRepositoryPostgres = new CommentRepositoryPostgres(
       pool,
@@ -113,7 +123,9 @@ describe('CommentRepositoryPostgres', () => {
       username: 'johndoe-comment',
       date: date1,
       content: 'sebuah comment',
+
       isDeleted: false,
+      likeCount: 1,
     });
     expect(comments[1]).toStrictEqual({
       id: 'comment-456',
@@ -121,6 +133,7 @@ describe('CommentRepositoryPostgres', () => {
       date: date2,
       content: 'sebuah comment lainnya',
       isDeleted: true,
+      likeCount: 0,
     });
   });
 
@@ -142,7 +155,7 @@ describe('CommentRepositoryPostgres', () => {
     expect(comments).toHaveLength(0);
   });
 
-  it('should get is comment exist correctly', async () => {
+  it('should verify comment availability correctly', async () => {
     // Arrange
     await UsersTableTestHelper.addUser({
       id: 'user-comment-123',
@@ -165,15 +178,14 @@ describe('CommentRepositoryPostgres', () => {
     );
 
     // Action
-    const isExist = await commentRepositoryPostgres.isCommentExist(
-      'comment-123',
-    );
+    const isExist =
+      await commentRepositoryPostgres.verifyCommentAvailability('comment-123', 'thread-comment-123');
 
     // Assert
     expect(isExist).toBe(true);
   });
 
-  it('should return false when comment is not exist', async () => {
+  it('should return false when comment is not available', async () => {
     // Arrange
     const fakeIdGenerator = (): string => '123';
     const commentRepositoryPostgres = new CommentRepositoryPostgres(
@@ -182,9 +194,8 @@ describe('CommentRepositoryPostgres', () => {
     );
 
     // Action
-    const isExist = await commentRepositoryPostgres.isCommentExist(
-      'comment-123',
-    );
+    const isExist =
+      await commentRepositoryPostgres.verifyCommentAvailability('comment-123', 'thread-comment-123');
 
     // Assert
     expect(isExist).toBe(false);
@@ -280,9 +291,8 @@ describe('CommentRepositoryPostgres', () => {
     await commentRepositoryPostgres.deleteComment('comment-123');
 
     // Assert
-    const comment = await CommentsTableTestHelper.findCommentById(
-      'comment-123',
-    );
+    const comment =
+      await CommentsTableTestHelper.findCommentById('comment-123');
     expect(comment).toBeDefined();
     expect(comment?.is_deleted).toBe(true);
   });
