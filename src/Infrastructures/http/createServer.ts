@@ -37,6 +37,7 @@ const createServer = async (container: Container): Promise<Application> => {
   });
 
   app.use((_req: Request, res: Response) => {
+    console.log('url', _req.url);
     res.status(404).json({
       status: 'fail',
       message: 'Route not found',
