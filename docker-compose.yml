@@ -22,8 +22,6 @@ services:
     image: postgres:14
     container_name: postgres
     restart: always
-    ports:
-      - '5432:5432'
     environment:
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
@@ -42,6 +40,7 @@ services:
       - '443:443'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - app
     networks:
