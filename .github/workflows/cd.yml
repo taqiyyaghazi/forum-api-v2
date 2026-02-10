@@ -24,7 +24,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          source: 'docker-compose.yml,nginx,init-letsencrypt.sh'
+          source: 'docker-compose.yml'
           target: '~/forum-api'
 
       - name: Deploy to VPS using Docker Compose
@@ -36,15 +36,18 @@ jobs:
           PGUSER: ${{ secrets.PGUSER }}
           PGPASSWORD: ${{ secrets.PGPASSWORD }}
           PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGHOST: ${{ secrets.PGHOST }}
+          PGPORT: ${{ secrets.PGPORT }}
           ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
           REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
           ACCESS_TOKEN_AGE: ${{ secrets.ACCESS_TOKEN_AGE }}
+          PORT: ${{ secrets.PORT }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          envs: GITHUB_USERNAME,GITHUB_TOKEN,IMAGE_TAG,PGUSER,PGPASSWORD,PGDATABASE,ACCESS_TOKEN_KEY,REFRESH_TOKEN_KEY,ACCESS_TOKEN_AGE
+          envs: GITHUB_USERNAME,GITHUB_TOKEN,IMAGE_TAG,PGUSER,PGPASSWORD,PGDATABASE,PGHOST,PGPORT,ACCESS_TOKEN_KEY,REFRESH_TOKEN_KEY,ACCESS_TOKEN_AGE,PORT
           script: |
             # Navigate to project directory
             cd ~/forum-api
