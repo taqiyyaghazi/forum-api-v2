@@ -55,11 +55,12 @@ jobs:
             # Set Image Name (Lowercase)
             export IMAGE_NAME=$(echo "ghcr.io/${{ github.repository }}:$IMAGE_TAG" | tr '[:upper:]' '[:lower:]')
 
-            # Pull latest images
-            docker compose pull
+            # Pull latest app image
+            docker compose pull app
 
-            # Start services
-            docker compose up -d
+            # Start app service
+            # --no-deps prevents restarting dependent services (postgres, nginx)
+            docker compose up -d --no-deps app
 
             # Clean up
             docker system prune -f
